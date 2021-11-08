@@ -6,6 +6,7 @@ import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { config } from 'dotenv'
+import { AuthController } from './auth.controller';
 config();
 const { JWT_SECRET_KEY } = process.env
 
@@ -20,5 +21,6 @@ const { JWT_SECRET_KEY } = process.env
 	],
 	providers: [AuthService, LocalStrategy, JwtStrategy],
 	exports: [AuthService],
+	controllers: [AuthController],
 })
 export class AuthModule { }
