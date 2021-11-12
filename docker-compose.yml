@@ -3,7 +3,7 @@ services:
   app:
     build: .
     depends_on:
-      - postgres
+      - database
     environment:
       DATABASE_URL: postgres://api:r6X4KRGwVIUk@postgres:5432/ps
       NODE_ENV: development
@@ -14,11 +14,14 @@ services:
     volumes: 
       - .:/app/
       - /app/node_modules
-  postgres:
-    image: postgres
+  database:
+    image: "postgres"
     ports:
-      - "35432:5432"
-    environment:
-      POSTGRES_USER: api
-      POSTGRES_PASSWORD: r6X4KRGwVIUk
-      POSTGRES_DB: ps
+      - "5432:5432"
+    env_file:
+      - postgres.env
+    volumes:
+      - database-data:/var/lib/postgresql/data
+
+volumes:
+  database-data:

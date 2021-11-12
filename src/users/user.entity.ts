@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Course } from '../courses/course.entity';
 
-@Entity()
+@Entity({ name: "users" })
 export class User {
 	@PrimaryGeneratedColumn()
 	id?: number;
@@ -16,16 +16,14 @@ export class User {
 	email: string;
 
 	@Column()
-	salt: string;
-
-	@Column()
 	password: string;
 
 	@Column()
 	tier: number;
 
-	@Column()
-	courses: Array<Course>
+	@ManyToMany(() => Course)
+    @JoinTable()
+	courses: Course[];
 
 	@Column({ default: false })
 	activated: boolean;

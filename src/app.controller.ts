@@ -1,8 +1,15 @@
-import { Controller, Get, Request, Post, UseGuards, Body, Put } from '@nestjs/common';
+import { Controller, Get, Request, Post, UseGuards, Body, Put, ConflictException, Query, BadRequestException, HttpException, HttpStatus, GoneException } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { RegisterDto } from './auth/register.dto';
+
+class AlreadyVerifiedException extends HttpException {
+	constructor() {
+		super('Already Verified', HttpStatus.FORBIDDEN)
+	}
+}
+
 
 @Controller()
 export class AppController {
@@ -16,8 +23,23 @@ export class AppController {
 
 	@Put('register')
 	async register(@Body() body: RegisterDto) {
-		return 'hi friends'
-		return this.authService.register(body);
+		const user = await this.authService.register(body)
+		if(user) throw new ConflictException()
+		
+	}
+
+	@Get('verify')
+	async verifyUser(@Query('token') token: string) {
+		switch (await this.authService.verifyToken(token)) {
+			case 'ALREADY_VERIFIED': 
+				throw new AlreadyVerifiedException()
+			case 'EXPIRED':
+				throw new GoneException();
+			case 'INVALID':
+				throw new BadRequestException();
+			case 'SUCCESS':
+				return;
+		}
 	}
 
 	@UseGuards(JwtAuthGuard)

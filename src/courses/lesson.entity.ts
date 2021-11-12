@@ -1,5 +1,5 @@
 import { Blog } from 'src/blog/blog.entity';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class Lesson {
@@ -12,6 +12,7 @@ export class Lesson {
 	@Column()
 	videoUrl: string
 
-	@Column()
+	@OneToOne(() => Blog)
+	@JoinColumn()
 	blog: Blog;
 }
