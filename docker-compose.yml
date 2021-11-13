@@ -1,27 +1,31 @@
 version: "3"
 services: 
   app:
-    build: .
-    depends_on:
-      - database
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
     environment:
-      DATABASE_URL: postgres://api:r6X4KRGwVIUk@postgres:5432/ps
-      NODE_ENV: development
-      PORT: 8000
+      - JWT_SECRET_KEY=ee0a2ee731ccff43e5ee9494a83b9e88a86b267466b625d83ddd7f2eb7a289d6
+      - POSTGRES_USER=psapi_test
+      - POSTGRES_PASSWORD=r6X4KRGwVIUk
+      - POSTGRES_DB=psapi_test
+      - SENDGRID_API_KEY=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
+    env_file:
+      .env
+    depends_on:
+      - postgres
     ports:
-      - "8000:8000"
-    command: npm run start:dev
-    volumes: 
-      - .:/app/
-      - /app/node_modules
-  database:
-    image: "postgres"
-    ports:
+      - 8000:8000
+    links:
+      - postgres:postgres
+    command: npm run start:prod
+
+  postgres:
+    image: postgres:alpine
+    ports: 
       - "5432:5432"
     env_file:
-      - postgres.env
-    volumes:
-      - database-data:/var/lib/postgresql/data
-
-volumes:
-  database-data:
+      - .env
+    restart: always

@@ -33,10 +33,19 @@ export class UsersService {
 		private tokenRepository: Repository<Token>
 	) { }
 
+	/**
+	 * @method findAll finds all the users in the database
+	 * @returns all users in the database
+	 */
 	findAll(): Promise<User[]> {
 		return this.usersRepository.find();
 	}
 
+	/**
+	 * @method findOne finds a user by their id or username
+	 * @param identifier the identifier of the user; number if id, string if username
+	 * @returns a promise of the user object
+	 */
 	findOne(identifier: number | string): Promise<User> {
 		switch (typeof identifier) {
 		case 'string':
@@ -89,10 +98,19 @@ export class UsersService {
 		}
 	}
 
+	/**
+	 * @method remove removes a user
+	 * @param id the id of the user to remove
+	 */
 	async remove(id: string): Promise<void> {
 		await this.usersRepository.delete(id);
 	}
 
+	/**
+	 * @method insert inserts a user object into the database
+	 * @param userDto the user data transfer object to insert
+	 * @returns a promise with the result of the query
+	 */
 	async insert(userDto: RegisterDto): Promise<RegisterUserResult> {
 		const salt = genSaltSync(saltRounds);
 		const password = await hash(Buffer.from(userDto.password), { salt: Buffer.from(salt) });
@@ -107,7 +125,12 @@ export class UsersService {
 		};
 	}
 
-	async findUserByActivationToken(token: string): Promise<Token | undefined> {
+	/**
+	 * @method findToken finds a token object by the token string
+	 * @param token the activation token to search for
+	 * @returns the token object
+	 */
+	async findToken(token: string): Promise<Token | undefined> {
 		const thing = (await this.tokenRepository.findOne({
 			select: ['user', 'id', 'expiresAt', 'token'],
 			relations: ['user'],
@@ -118,9 +141,17 @@ export class UsersService {
 		return thing;
 	}
 
+	/**
+	 * @method createNewActivationToken create an activation token for a user
+	 * @param user the user to create the token for
+	 * @returns a promise with the token
+	 */
 	async createNewActivationToken(user: User): Promise<Token> {
 		const token = new Token();
+		// set the expires at time to 1 hour from creation (use bigints because limit overflow)
 		token.expiresAt = (BigInt(new Date().getTime()) + BigInt(60 * 60 * 1000)).toString();
+
+		// generate a token using uuidv4
 		token.token = v4();
 		token.user = user;
 

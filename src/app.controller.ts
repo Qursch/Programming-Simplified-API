@@ -30,7 +30,7 @@ export class AppController {
 
 	@Get('verify')
 	async verifyUser(@Query('token') token: string) {
-		switch (await this.authService.verifyToken(token)) {
+		switch (await this.authService.verifyActivationToken(token)) {
 		case 'ALREADY_VERIFIED': 
 			throw new AlreadyVerifiedException();
 		case 'EXPIRED':
@@ -46,5 +46,10 @@ export class AppController {
 	@Get('profile')
 	getProfile(@Request() req) {
 		return req.user;
+	}
+
+	@Get('test')
+	te() {
+		return 'test lol';
 	}
 }

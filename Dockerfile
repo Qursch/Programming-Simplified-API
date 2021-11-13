@@ -1,14 +1,13 @@
-FROM node
+FROM node:alpine
+EXPOSE 8000
 
 WORKDIR /app
 
-COPY ./package.json .
-COPY ./package-lock.json .
+COPY package.json /app/
+COPY package-lock.json /app/
 
-RUN npm install
+RUN npm ci
 
-COPY . .
+COPY . /app/
 
-EXPOSE 3000
-
-CMD npm start
+CMD npm run start:prod

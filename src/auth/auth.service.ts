@@ -10,10 +10,10 @@ import { User } from 'src/users/user.entity';
 config();
 sg.setApiKey(process.env.SENDGRID_API_KEY);
 
-type TokenVerificationResult = 'SUCCESS' | 'EXPIRED' | 'INVALID' | 'ALREADY_VERIFIED'
+type ActivationTokenVerificationResult = 'SUCCESS' | 'EXPIRED' | 'INVALID' | 'ALREADY_VERIFIED'
 type UserVerificationResult  = 'SUCCESS' | 'USER_NOT_FOUND' | 'INVALID_PASSWORD'
 const verifMessage = (_strings: TemplateStringsArray, token: string) => {
-	return `Yooo laddy verify your programming simplified account at ${token}`;
+	return `Activate your Programming Simplified account by clicking this link:\n https://programmingsimplified.org/dashboard/activate/${token}`;
 };
 
 @Injectable()
@@ -59,7 +59,7 @@ export class AuthService {
 		const user = await this.usersService.insert(userDto);
 		if (!user.ok && user.reason) return user.reason;
 		this.logger.log(`REG - User ${user.result.username} registered`);
-		const token = await this.usersService.createNewToken(await this.usersService.findOne(userDto.username));
+		const token = await this.usersService.createNewActivationToken(await this.usersService.findOne(userDto.username));
 
 		// construct the message to send
 		const message = {
@@ -70,8 +70,9 @@ export class AuthService {
 		};
 
 		// send the verification email
-		await sg.send(message);
-		this.logger.log(`REG - Email sent to ${message.to} | ${user.result.username}`);
+		sg.send(message).then(() => {
+			this.logger.log(`REG - Email sent to ${message.to} | ${user.result.username}`);
+		});
 	}
 
 	/**
@@ -79,8 +80,8 @@ export class AuthService {
 	 * @param token the activation token to verify
 	 * @returns the result of the verification
 	 */
-	async verifyToken(token: string): Promise<TokenVerificationResult> {
-		const result = await this.usersService.findByToken(token);
+	async verifyActivationToken(token: string): Promise<ActivationTokenVerificationResult> {
+		const result = await this.usersService.findToken(token);
 		
 		if(!result) return 'INVALID';
 		const user = result.user;
