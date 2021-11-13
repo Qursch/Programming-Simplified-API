@@ -6,7 +6,7 @@ import { RegisterDto } from './auth/register.dto';
 
 class AlreadyVerifiedException extends HttpException {
 	constructor() {
-		super('Already Verified', HttpStatus.FORBIDDEN)
+		super('Already Verified', HttpStatus.FORBIDDEN);
 	}
 }
 
@@ -23,22 +23,22 @@ export class AppController {
 
 	@Put('register')
 	async register(@Body() body: RegisterDto) {
-		const user = await this.authService.register(body)
-		if(user) throw new ConflictException()
+		const user = await this.authService.register(body);
+		if(user) throw new ConflictException();
 		
 	}
 
 	@Get('verify')
 	async verifyUser(@Query('token') token: string) {
 		switch (await this.authService.verifyToken(token)) {
-			case 'ALREADY_VERIFIED': 
-				throw new AlreadyVerifiedException()
-			case 'EXPIRED':
-				throw new GoneException();
-			case 'INVALID':
-				throw new BadRequestException();
-			case 'SUCCESS':
-				return;
+		case 'ALREADY_VERIFIED': 
+			throw new AlreadyVerifiedException();
+		case 'EXPIRED':
+			throw new GoneException();
+		case 'INVALID':
+			throw new BadRequestException();
+		case 'SUCCESS':
+			return;
 		}
 	}
 

@@ -3,62 +3,87 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './register.dto';
 import { verify } from 'argon2';
-import { config } from 'dotenv'
-import * as sg from '@sendgrid/mail'
+import { config } from 'dotenv';
+import * as sg from '@sendgrid/mail';
+import { User } from 'src/users/user.entity';
 
 config();
-sg.setApiKey(process.env.SENDGRID_API_KEY)
+sg.setApiKey(process.env.SENDGRID_API_KEY);
 
-type VerificationResult = 'SUCCESS' | 'EXPIRED' | 'INVALID' | 'ALREADY_VERIFIED'
-
+type TokenVerificationResult = 'SUCCESS' | 'EXPIRED' | 'INVALID' | 'ALREADY_VERIFIED'
+type UserVerificationResult  = 'SUCCESS' | 'USER_NOT_FOUND' | 'INVALID_PASSWORD'
 const verifMessage = (_strings: TemplateStringsArray, token: string) => {
-	return `Yooo laddy verify your programming simplified account at ${token}`
-}
+	return `Yooo laddy verify your programming simplified account at ${token}`;
+};
 
 @Injectable()
 export class AuthService {
-	private readonly logger: Logger = new Logger(AuthService.name)
+	// The nest.js logger class to use
+	private readonly logger: Logger = new Logger(AuthService.name);
 	constructor(
 		private usersService: UsersService,
 		private jwtService: JwtService,
 	) { }
 
-	async validateUser(username: string, pass: string): Promise<any> {
+	/**
+	 * @method validateUser
+	 * @param username the username to validate
+	 * @param pass the password to validate
+	 * @returns the user object or none
+	 */
+	async validateUser(username: string, pass: string): Promise<UserVerificationResult> {
 		const user = await this.usersService.findOne(username);
-		if (user && await verify(user.password, pass)) {
-			return user;
-		}
-		return null;
+		if(!user) return 'USER_NOT_FOUND';
+		const res = await verify(user.password, pass);
+		return res ? 'SUCCESS' : 'USER_NOT_FOUND';
 	}
 
-	async login(user: any) {
+	/**
+	 * @method login
+	 * @param user the user object to sign a token with
+	 * @returns the jwt access token
+	 */
+	async login(user: { username, userId }): Promise<{ access_token: string }> {
 		const payload = { username: user.username, sub: user.userId };
 		return {
 			access_token: this.jwtService.sign(payload),
 		};
 	}
 
-	async register(userDto: RegisterDto): Promise<string | undefined> {
+	/**
+	 * 
+	 * @param userDto the registration data transfer object 
+	 * @returns either void or the reason the user was not created
+	 */
+	async register(userDto: RegisterDto): Promise<string | void> {
 		const user = await this.usersService.insert(userDto);
 		if (!user.ok && user.reason) return user.reason;
-		this.logger.log(`REG - User ${user.result.username} registered`)
+		this.logger.log(`REG - User ${user.result.username} registered`);
 		const token = await this.usersService.createNewToken(await this.usersService.findOne(userDto.username));
+
+		// construct the message to send
 		const message = {
 			to: user.result.email,
 			from: 'verify@programmingsimplified.org',
 			subject: 'Verify your Programming Simplified account',
 			text: verifMessage`${token.token}`
-		}
+		};
 
+		// send the verification email
 		await sg.send(message);
-		this.logger.log(`REG - Email sent to ${message.to} | ${user.result.username}`)
+		this.logger.log(`REG - Email sent to ${message.to} | ${user.result.username}`);
 	}
 
-	async verifyToken(token: string): Promise<VerificationResult> {
+	/**
+	 * @method verifyToken verifies an account activation token
+	 * @param token the activation token to verify
+	 * @returns the result of the verification
+	 */
+	async verifyToken(token: string): Promise<TokenVerificationResult> {
 		const result = await this.usersService.findByToken(token);
 		
-		if(!result) return 'INVALID'
-		const user = result.user
+		if(!result) return 'INVALID';
+		const user = result.user;
 		if (!user) return 'INVALID';
 		if (user.activated) return 'ALREADY_VERIFIED';
 		if (BigInt(result.expiresAt) < new Date().getTime()) return 'EXPIRED';

@@ -1,30 +1,30 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Course } from '../courses/course.entity';
 
-@Entity({ name: "users" })
+@Entity({ name: 'users' })
 export class User {
 	@PrimaryGeneratedColumn()
-	id?: number;
+		id?: number;
 
 	@Column()
-	name: string;
+		name: string;
 
 	@Column()
-	username: string
+		username: string;
 
 	@Column()
-	email: string;
+		email: string;
 
 	@Column()
-	password: string;
+		password: string;
 
 	@Column()
-	tier: number;
+		tier: number;
 
 	@ManyToMany(() => Course)
-    @JoinTable()
-	courses: Course[];
+	@JoinTable()
+		courses: Course[];
 
 	@Column({ default: false })
-	activated: boolean;
+		activated: boolean;
 }

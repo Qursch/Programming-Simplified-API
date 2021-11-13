@@ -1,18 +1,18 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user.entity";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class Token {
 	@PrimaryGeneratedColumn()
-	id: string
+		id: string;
 
 	@Column()
-	token: string
+		token: string;
 
 	@Column()
-	expiresAt: string
+		expiresAt: string;
 
 	@OneToOne(() => User)
 	@JoinColumn()
-	user: User
+		user: User;
 }

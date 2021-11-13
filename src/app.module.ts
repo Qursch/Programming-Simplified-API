@@ -1,17 +1,17 @@
-import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
-import { AuthModule } from "./auth/auth.module";
-import { UsersModule } from "./users/users.module";
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { User } from "./users/user.entity";
-import { config } from "dotenv";
-import { Course } from "./courses/course.entity";
-import { Lesson } from "./courses/lesson.entity";
-import { Blog } from "./blog/blog.entity";
-import { ThrottlerModule } from "@nestjs/throttler";
-import { Token } from "./users/token.entity";
+import { User } from './users/user.entity';
+import { config } from 'dotenv';
+import { Course } from './courses/course.entity';
+import { Lesson } from './courses/lesson.entity';
+import { Blog } from './blog/blog.entity';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { Token } from './users/token.entity';
 
 config();
 
