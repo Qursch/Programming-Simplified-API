@@ -10,7 +10,7 @@ import { User } from 'src/users/user.entity';
 config();
 sg.setApiKey(process.env.SENDGRID_API_KEY);
 
-type ActivationTokenVerificationResult = 'SUCCESS' | 'EXPIRED' | 'INVALID' | 'ALREADY_VERIFIED'
+export type ActivationTokenVerificationResult = 'SUCCESS' | 'EXPIRED' | 'INVALID' | 'ALREADY_VERIFIED'
 type UserVerificationResult  = 'SUCCESS' | 'USER_NOT_FOUND' | 'INVALID_PASSWORD'
 const verifMessage = (_strings: TemplateStringsArray, token: string) => {
 	return `Activate your Programming Simplified account by clicking this link:\n https://programmingsimplified.org/dashboard/activate/${token}`;
@@ -31,11 +31,11 @@ export class AuthService {
 	 * @param pass the password to validate
 	 * @returns the user object or none
 	 */
-	async validateUser(username: string, pass: string): Promise<UserVerificationResult> {
+	async validateUser(username: string, pass: string): Promise<[User | null, UserVerificationResult]> {
 		const user = await this.usersService.findOne(username);
-		if(!user) return 'USER_NOT_FOUND';
+		if(!user) return [null, 'USER_NOT_FOUND'];
 		const res = await verify(user.password, pass);
-		return res ? 'SUCCESS' : 'USER_NOT_FOUND';
+		return res ? [user, 'SUCCESS'] : [null, 'USER_NOT_FOUND'];
 	}
 
 	/**
@@ -43,8 +43,9 @@ export class AuthService {
 	 * @param user the user object to sign a token with
 	 * @returns the jwt access token
 	 */
-	async login(user: { username, userId }): Promise<{ access_token: string }> {
-		const payload = { username: user.username, sub: user.userId };
+	async login(user: { username, id }): Promise<{ access_token: string }> {
+		const payload = { username: user.username, sub: user.id };
+		
 		return {
 			access_token: this.jwtService.sign(payload),
 		};
@@ -66,8 +67,10 @@ export class AuthService {
 			to: user.result.email,
 			from: 'verify@programmingsimplified.org',
 			subject: 'Verify your Programming Simplified account',
-			text: verifMessage`${token.token}`
+			text: verifMessage`${token}`
 		};
+
+		console.log(token);
 
 		// send the verification email
 		sg.send(message).then(() => {
@@ -81,14 +84,6 @@ export class AuthService {
 	 * @returns the result of the verification
 	 */
 	async verifyActivationToken(token: string): Promise<ActivationTokenVerificationResult> {
-		const result = await this.usersService.findToken(token);
-		
-		if(!result) return 'INVALID';
-		const user = result.user;
-		if (!user) return 'INVALID';
-		if (user.activated) return 'ALREADY_VERIFIED';
-		if (BigInt(result.expiresAt) < new Date().getTime()) return 'EXPIRED';
-		this.usersService.activateUser(user.id);
-		return 'SUCCESS';
+		return this.usersService.activateUser(token);
 	}
 }

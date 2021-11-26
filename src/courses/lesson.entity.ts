@@ -1,18 +1,17 @@
-import { Blog } from 'src/blog/blog.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Course } from './course.entity';
 
 @Entity()
 export class Lesson {
 	@PrimaryGeneratedColumn()
-	id: number;
+		id?: number;
 
 	@Column()
-	name: string;
+		notionLink: string;
 
 	@Column()
-	videoUrl: string
+		completed: boolean;
 
-	@OneToOne(() => Blog)
-	@JoinColumn()
-	blog: Blog;
+	@ManyToOne(() => Course, course => course.lessons)
+		course?: Course;
 }

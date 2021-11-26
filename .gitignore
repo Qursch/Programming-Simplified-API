@@ -37,3 +37,6 @@ lerna-debug.log*
 # Envrionment Variables
 .env
 *.env
+
+# Public/private key files
+*.pem

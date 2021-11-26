@@ -7,6 +7,12 @@ import { verify, hash } from 'argon2';
 import { RegisterDto } from 'src/auth/register.dto';
 import { Token } from './token.entity';
 import { v4 } from 'uuid';
+import { AddCourseDto } from './addCourseDto';
+
+import { JWK, JWE, parse } from 'node-jose';
+import { readFileSync } from 'fs';
+import { ActivationTokenVerificationResult } from 'src/auth/auth.service';
+import { join } from 'path/posix';
 
 const saltRounds = 10;
 
@@ -22,6 +28,11 @@ export type RegisterUserResult = {
 	ok: boolean;
 	result?: User;
 	reason?: 'ALREADY_EXISTS' | FailedRequestReasons;
+}
+
+export type JWTActivationToken = {
+	userId: number,
+	expiresAt: BigInt
 }
 
 @Injectable()
@@ -146,31 +157,71 @@ export class UsersService {
 	 * @param user the user to create the token for
 	 * @returns a promise with the token
 	 */
-	async createNewActivationToken(user: User): Promise<Token> {
-		const token = new Token();
-		// set the expires at time to 1 hour from creation (use bigints because limit overflow)
-		token.expiresAt = (BigInt(new Date().getTime()) + BigInt(60 * 60 * 1000)).toString();
+	async createNewActivationToken(user: User): Promise<string> {
+		return await this.encryptActivationToken(user.id);
+	}
 
-		// generate a token using uuidv4
-		token.token = v4();
-		token.user = user;
-
-		const res = await this.tokenRepository.save(token);
+	async activateUser(token: string): Promise<ActivationTokenVerificationResult> {
+		const [valid,res, user] = await this.checkActivationToken(token);
+		if (!valid) return 'INVALID';
+		if(user.activated) return 'ALREADY_VERIFIED';
+		user.activated = true;
+		await this.usersRepository.save(user);
 		return res;
 	}
 
-	async getActivationToken(id: number): Promise<Token> {
-		return await this.tokenRepository.findOne({
-			select: ['expiresAt', 'id', 'token', 'user'],
-			where: {
-				id
-			}
-		});
+	async addCourse(dto: AddCourseDto) {
+		const user = await this.usersRepository.findOne(dto.userId);
+		user.courses.push({ name: dto.courseName, lessons: dto.lessons.map(i => ({ notionLink: i.link, completed: false })) });
+	}
+	private get JWTKeys(): [string, string] {
+		return [readFileSync(join(__dirname, '../../plain_private.jwt.pem')).toString(), readFileSync(join(__dirname, '../../public.jwt.pem')).toString()];
 	}
 
-	async activateUser(id: number) {
-		const user = await this.usersRepository.findOne(id);
-		user.activated = true;
-		await this.usersRepository.save(user);
+	async encryptActivationToken(userId: number, format: 'compact' | 'general' | 'flattened' = 'compact', contentAlg = 'A256GCM', alg = 'RSA-OAEP') {
+		const [_publicKey] = this.JWTKeys;
+		const publicKey = await JWK.asKey(_publicKey, 'pem');
+		const buffer: Buffer = Buffer.from(JSON.stringify(
+			{ 
+				userId: userId, 
+				expiresAt: (BigInt(new Date().getTime()) + BigInt(60 * 60 * 1000)).toString() }));
+		const encrypted: string = await JWE.createEncrypt({ format: format, contentAlg: contentAlg, fields: { alg: alg } }, publicKey)
+			.update(buffer)
+			.final();
+
+		return encrypted;
+	}
+
+	async checkActivationToken(token: string): Promise<[boolean, ActivationTokenVerificationResult, User?]> {
+		const _privateKey = this.JWTKeys[0];
+		const privateKey = await JWK.asKey(_privateKey, 'pem');
+
+		const keystore = JWK.createKeyStore();
+		await keystore.add(privateKey);
+
+		const parsed = parse.compact(token);
+		let decrypted;
+		try {
+			decrypted = await parsed.perform(keystore);
+		} catch {
+			return [false, 'INVALID'];
+		}
+
+		const json: {
+			userId: number,
+			expiresAt: BigInt
+		} = JSON.parse(decrypted.payload.toString());
+
+		const user = await this.findOne(json.userId);
+
+		if(json && json.expiresAt > BigInt(new Date().getTime()) && user ) {
+			return [true, 'SUCCESS', user];
+		}
+
+		if(json.expiresAt <= BigInt(new Date().getTime())) {
+			return [false, 'EXPIRED'];
+		}
+
+		return [false, 'INVALID'];
 	}
 }

@@ -9,9 +9,12 @@ import { User } from './users/user.entity';
 import { config } from 'dotenv';
 import { Course } from './courses/course.entity';
 import { Lesson } from './courses/lesson.entity';
-import { Blog } from './blog/blog.entity';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { Token } from './users/token.entity';
+import { CoursesService } from './courses/courses.service';
+import { CoursesModule } from './courses/courses.module';
+import { FeedbackController } from './feedback/feedback.controller';
+import { FeedbackService } from './feedback/feedback.service';
 
 config();
 
@@ -24,15 +27,16 @@ config();
 			username: process.env.POSTGRES_USER,
 			password: process.env.POSTGRES_PASSWORD,
 			database: 'psapi_test',
-			entities: [User, Course, Lesson, Blog, Token],
+			entities: [User, Course, Lesson, Token],
 			synchronize: true,
 		}),
 		ThrottlerModule.forRoot({
 			ttl: 60,
 			limit: 10,
-		}),],
-	controllers: [AppController],
-	providers: [AppService],
+		}),
+		CoursesModule,],
+	controllers: [AppController, FeedbackController],
+	providers: [AppService, CoursesService, FeedbackService],
 })
 export class AppModule {
 	constructor(private connection: Connection) { }

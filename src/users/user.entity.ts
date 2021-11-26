@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Course } from '../courses/course.entity';
 
 @Entity({ name: 'users' })
@@ -21,8 +21,7 @@ export class User {
 	@Column()
 		tier: number;
 
-	@ManyToMany(() => Course)
-	@JoinTable()
+	@OneToMany(() => Course, course => course.user)
 		courses: Course[];
 
 	@Column({ default: false })

@@ -1,8 +1,10 @@
-import { Controller, Get, Request, Post, UseGuards, Body, Put, ConflictException, Query, BadRequestException, HttpException, HttpStatus, GoneException } from '@nestjs/common';
+import { Controller, Get, Request, Post, UseGuards, Body, Put, ConflictException, Query, BadRequestException, HttpException, HttpStatus, GoneException, InternalServerErrorException } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { RegisterDto } from './auth/register.dto';
+import { AddCourseDto } from './users/addCourseDto';
+import { UsersService } from './users/users.service';
 
 class AlreadyVerifiedException extends HttpException {
 	constructor() {
@@ -13,7 +15,7 @@ class AlreadyVerifiedException extends HttpException {
 
 @Controller()
 export class AppController {
-	constructor(private authService: AuthService) { }
+	constructor(private authService: AuthService, private usersService: UsersService) { }
 
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
@@ -25,7 +27,6 @@ export class AppController {
 	async register(@Body() body: RegisterDto) {
 		const user = await this.authService.register(body);
 		if(user) throw new ConflictException();
-		
 	}
 
 	@Get('verify')
@@ -44,12 +45,19 @@ export class AppController {
 
 	@UseGuards(JwtAuthGuard)
 	@Get('profile')
-	getProfile(@Request() req) {
-		return req.user;
+	async getProfile(@Request() req) {
+		const user = await this.usersService.findOne(req.user.sub);
+		if(!user) {
+			console.log(req.user);
+			throw new InternalServerErrorException();
+		}
+		delete user.password;
+		return user;
 	}
-
-	@Get('test')
-	te() {
-		return 'test lol';
+	
+	//TODO: Implement Notion scraper to get info on course
+	@Post('users/addCourse')
+	async addCourse(@Body() addCourseDto: AddCourseDto) {
+		return await this.usersService.addCourse(addCourseDto);
 	}
 }
