@@ -12,6 +12,6 @@ export class Lesson {
 	@Column()
 		completed: boolean;
 
-	@ManyToOne(() => Course, course => course.lessons)
+	@ManyToOne(() => Course, (course) => course.lessons)
 		course?: Course;
 }

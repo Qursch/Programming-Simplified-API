@@ -21,7 +21,7 @@ export class User {
 	@Column()
 		tier: number;
 
-	@OneToMany(() => Course, course => course.user)
+	@OneToMany(() => Course, (course) => course.user)
 		courses: Course[];
 
 	@Column({ default: false })

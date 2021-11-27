@@ -54,7 +54,7 @@ export class AppController {
 		delete user.password;
 		return user;
 	}
-	
+
 	//TODO: Implement Notion scraper to get info on course
 	@Post('users/addCourse')
 	async addCourse(@Body() addCourseDto: AddCourseDto) {

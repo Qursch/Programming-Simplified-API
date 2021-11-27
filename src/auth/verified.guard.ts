@@ -10,7 +10,7 @@ export class VerifiedGuard implements CanActivate {
 		return this.validateRequest(request);
 	}
 
-	validateRequest(request: any) {
+	validateRequest(request) {
 		return request.user.activated;
 	}
 }

@@ -23,4 +23,4 @@ const { JWT_SECRET_KEY } = process.env;
 	exports: [AuthService],
 	controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}
