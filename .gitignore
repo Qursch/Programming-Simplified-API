@@ -34,9 +34,4 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# Envrionment Variables
 .env
-*.env
-
-# Public/private key files
-*.pem
