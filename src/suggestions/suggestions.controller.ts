@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
@@ -80,13 +80,16 @@ export class SuggestionsController {
 			};
 		});
 
-		const res = await notion.pages.create({
-			parent: {
-				database_id: '0ea6a20bacaf400eb261ac128c109c61'
-			},
-			properties: props
-		});
-
-		console.log(res);
+		try {
+			await notion.pages.create({
+				parent: {
+					database_id: '0ea6a20bacaf400eb261ac128c109c61'
+				},
+				properties: props
+			});
+		} catch {
+			return new BadRequestException('we did an oopsie');
+		}
+		
 	}
 }
