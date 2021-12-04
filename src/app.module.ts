@@ -19,7 +19,7 @@ import { APP_GUARD } from '@nestjs/core';
 		UsersModule,
 		MongooseModule.forRoot('mongodb://localhost/psapi'),
 		AuthorizationModule
-	],
+	], 
 	controllers: [AppController, SuggestionsController],
 	providers: [
 		AppService,
