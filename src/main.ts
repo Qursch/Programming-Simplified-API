@@ -9,6 +9,6 @@ async function bootstrap() {
 	app.enableCors();
 	app.useGlobalPipes(new ValidationPipe());
 	// something im using port 8000 for something else don't switch it
-	await app.listen(8080);
+	await app.listen(process.env.PORT ?? 8080);
 }
 bootstrap();
