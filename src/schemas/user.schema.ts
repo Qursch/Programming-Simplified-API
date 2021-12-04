@@ -15,7 +15,6 @@ export class User {
 	@Prop()
 		password: string;
 	@Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Course'}]})
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		courses: Course[];
 }
 

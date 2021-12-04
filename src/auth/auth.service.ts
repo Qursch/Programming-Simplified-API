@@ -1,30 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/schemas/user.schema';
-import { UsersService } from 'src/users/users.service';
-import { verify } from 'argon2';
+import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-
-type ValidateResult = 'ERROR' | Partial<User>
+import { User } from 'src/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
-	constructor(private usersService: UsersService, private jwtService: JwtService) {}
+	constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService
+	) {}
 
-	async validateUser(username, password): Promise<ValidateResult> {
+	async validateUser(username: string, pass: string): Promise<Partial<User> | null> {
 		const user = await this.usersService.findOne(username);
-		if (!user) return 'ERROR';
-		if(verify(user.password, password)) {
-			const { password, ...res } = user;
+		if (user && user.password === pass) {
+			const { password, ...result } = user;
 			password;
-			return res;
-		} else {
-			return 'ERROR';
+			return result;
 		}
+		return null;
 	}
 
-	async login(user: { username: string, userId: string }) {
+	async login(user) {
+		const payload = { username: user.username, sub: user.userId };
 		return {
-			bearer: this.jwtService.sign({ username: user.username, sub: user.userId })
+			access_token: this.jwtService.sign(payload),
 		};
 	}
 }
