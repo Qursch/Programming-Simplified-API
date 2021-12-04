@@ -8,6 +8,7 @@ async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	app.enableCors();
 	app.useGlobalPipes(new ValidationPipe());
-	await app.listen(8000);
+	// something im using port 8000 for something else don't switch it
+	await app.listen(8080);
 }
 bootstrap();
