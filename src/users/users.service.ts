@@ -6,7 +6,7 @@ import UserDto from 'src/dto/user.dto';
 
 import * as argon2 from 'argon2';
 
-export type UserInsertResult = User | 'EXISTS' | 'ERROR'
+export type UserInsertResult = 'CREATED' | 'CONFLICT' | 'ERROR'
 
 @Injectable()
 export class UsersService {
@@ -17,13 +17,21 @@ export class UsersService {
 	}
 
 	async findOne(username: string): Promise<User | undefined> {
-		return await this.userModel.findOne(user => user.username == username);
+		return await this.userModel.findOne({ username: username }).exec();
+	}
+
+	async findOneByEmail(email: string): Promise<User | undefined> {
+		return await this.userModel.findOne({ email: email }).exec();
 	}
 
 	async insert(dto: UserDto): Promise<UserInsertResult> {
+		const foundByUsername = await this.findOne(dto.username);
+		const foundOneByEmail = await this.findOneByEmail(dto.email);
+		if(foundByUsername || foundOneByEmail) return 'CONFLICT';
 		const user = dto;
 		user.password = (await argon2.hash(dto.password)).toString();
 		const res = new this.userModel(user as Partial<User>);
-		return res.save();
+		await res.save();
+		return 'CREATED';
 	}
 }
