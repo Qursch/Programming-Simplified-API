@@ -4,33 +4,58 @@ import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
 
 const WEBHOOK_URI = 'https://discord.com/api/webhooks/916512548000497764/8nRHdkg5s023Of4x2Zq22z-rwD-O5Zk2V8T4D0aREbszJd9CVBaSfIaTGYOW1jNbg3qY';
-export type Feedback = Partial<{
-    referral   : string,
-    courses    : string,
-    lessons    : string,
-    instructors: string,
-    feedback   : string,
-    else       : string,
+export type Feedback = {
     avatarUrl  : string,
     username   : string
-}>;
+} & Record<string, string>;
 
 @Controller('suggestions')
 export class SuggestionsController {
 	// @UseGuards(JwtAuthGuard)
 	@Post('feedback')
 	async feedback(@Body() feedback: Feedback) {
+
+		const url = feedback.avatarUrl;
+		delete feedback.avatarUrl;
+		const username = feedback.avatarUrl;
+		delete feedback.username;
+
 		const keys = Object.keys(feedback);
 		const embed = new MessageEmbed()
-			.setTitle(`Feedback from ${feedback.username}`)
+			.setTitle(`Feedback from ${username ?? '<username not provided>'}`)
 			.addFields(keys.map(i => {
 				const ret =  { name: i, value: feedback[i] };
 				return ret;
 			}))
-			.setThumbnail(feedback.avatarUrl)
+			.setThumbnail(url)
+			.setAuthor(
+				// '厨晚欢貌能', 
+				username ?? '<username not provided>',
+				url ?? ''
+			);
+		axios.post(WEBHOOK_URI, {
+			embeds: [
+				embed
+			]
+		});
+	}
+
+	// @UseGuards(JwtAuthGuard)
+	@Post('bug')
+	async bug(@Body() feedback: Feedback) {
+		const url = feedback.avatarUrl;
+		delete feedback.avatarUrl;
+		const keys = Object.keys(feedback);
+		const embed = new MessageEmbed()
+			.setTitle(`Bug Report from ${feedback.username}`)
+			.addFields(keys.map(i => {
+				const ret =  { name: i, value: feedback[i] };
+				return ret;
+			}))
+			.setThumbnail(url)
 			.setAuthor(
 				'厨晚欢貌能', 
-				'https://s.abcnews.com/images/US/todd-barrick-jr-ht-jef-190910_hpMain_16x9_992.jpg'
+				url
 			);
 		axios.post(WEBHOOK_URI, {
 			embeds: [
