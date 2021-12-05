@@ -51,7 +51,7 @@ export class SuggestionsController {
 	async bug(@Body() feedback: Feedback) {
 		// const url = feedback.avatarUrl;
 		delete feedback.avatarUrl;
-		
+
 		const username = feedback.username;
 		delete feedback.username;
 		const keys = Object.keys(feedback);
@@ -61,7 +61,7 @@ export class SuggestionsController {
 				title: [
 					{
 						text: {
-							content: `Bug Report by ${username ?? '<username not provided>'}`,
+							content: username ?? '<username not provided>',
 						}
 					}
 				]
@@ -90,6 +90,6 @@ export class SuggestionsController {
 		} catch {
 			return new BadRequestException('we did an oopsie');
 		}
-		
+
 	}
 }
