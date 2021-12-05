@@ -49,9 +49,6 @@ export class SuggestionsController {
 	// @UseGuards(JwtAuthGuard)
 	@Post('bug')
 	async bug(@Body() feedback: Feedback) {
-		// const url = feedback.avatarUrl;
-		delete feedback.avatarUrl;
-
 		const username = feedback.username;
 		delete feedback.username;
 		const keys = Object.keys(feedback);
