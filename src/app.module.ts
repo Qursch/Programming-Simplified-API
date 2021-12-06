@@ -5,7 +5,7 @@ import { AuthModule } from './authentication/auth.module';
 import { UsersModule } from './users/users.module';
 import { AuthorizationService } from './authorization/authorization.service';
 import { AuthorizationModule } from './authorization/authorization.module';
-import { SuggestionsController } from './suggestions/suggestions.controller';
+import { FeedbackController } from './feedback/feedback.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
@@ -20,15 +20,14 @@ import { APP_GUARD } from '@nestjs/core';
 		MongooseModule.forRoot('mongodb://localhost/psapi'),
 		AuthorizationModule
 	], 
-	controllers: [AppController, SuggestionsController],
+	controllers: [AppController, FeedbackController],
 	providers: [
 		AppService,
 		AuthorizationService,
 		{
 			provide: APP_GUARD,
 			useClass: ThrottlerGuard
-		}
-		  
+		} 
 	],
 })
 export class AppModule { }

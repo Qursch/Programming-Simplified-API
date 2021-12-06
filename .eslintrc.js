@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 	'env': {
 		'browser': true,
 		'es2021': true
@@ -15,12 +15,16 @@ export default {
 	'plugins': [
 		'@typescript-eslint'
 	],
+	'ignorePatterns': ['dist/**/*.js', 'dist/**/*.ts', '*eslint*'],
 	'rules': {
 		'indent': [
 			'error',
 			'tab'
 		],
-
+		'linebreak-style': [
+			'error',
+			'unix'
+		],
 		'quotes': [
 			'error',
 			'single'

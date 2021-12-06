@@ -8,10 +8,12 @@ import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
 	config();
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create(AppModule, {
+		logger: ['log', 'error', 'warn']
+	});
 	app.enableCors();
 	if(process.env.USE_CSRF == 'true') {
-		console.log(process.env.USE_CSRF)
+		console.log(process.env.USE_CSRF);
 		app.use(cookieParser());
 		app.use(csurf({ cookie: true }));
 	}
