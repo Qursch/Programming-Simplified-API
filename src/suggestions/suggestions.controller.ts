@@ -19,7 +19,6 @@ export class SuggestionsController {
 	// @UseGuards(JwtAuthGuard)
 	@Post('feedback')
 	async feedback(@Body() feedback: Feedback) {
-
 		const url = feedback.avatarUrl ?? 'https://programmingsimplified.org/logo_primary.png';
 		delete feedback.avatarUrl;
 		const username = feedback.username ?? '<username not provided>';
