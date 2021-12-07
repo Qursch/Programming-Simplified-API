@@ -21,10 +21,7 @@ module.exports = {
 			'error',
 			'tab'
 		],
-		'linebreak-style': [
-			'error',
-			'unix'
-		],
+		// don't add indent type cause it fucks up on my side
 		'quotes': [
 			'error',
 			'single'

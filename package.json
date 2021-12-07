@@ -29,7 +29,6 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/throttler": "^2.0.0",
     "@notionhq/client": "^0.4.9",
-    "@types/argon2": "^0.15.0",
     "argon2": "^0.28.3",
     "axios": "^0.24.0",
     "class-transformer": "^0.5.1",

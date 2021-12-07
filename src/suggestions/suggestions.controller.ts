@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { BadGatewayException, Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
@@ -19,7 +19,6 @@ export class SuggestionsController {
 	// @UseGuards(JwtAuthGuard)
 	@Post('feedback')
 	async feedback(@Body() feedback: Feedback) {
-
 		const url = feedback.avatarUrl ?? 'https://programmingsimplified.org/logo_primary.png';
 		delete feedback.avatarUrl;
 		const username = feedback.username ?? '<username not provided>';
@@ -85,7 +84,7 @@ export class SuggestionsController {
 				properties: props
 			});
 		} catch {
-			return new BadRequestException('we did an oopsie');
+			return new BadGatewayException('we did an oopsie');
 		}
 
 	}
