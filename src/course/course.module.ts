@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
+import { CourseService } from './course.service';
+import { CourseController } from './course.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/schemas/user.schema';
 import { Course, CourseSchema } from 'src/schemas/course.schema';
@@ -14,8 +14,7 @@ import { Lesson, LessonSchema } from 'src/schemas/lesson.schema';
 			{ name: Lesson.name, schema: LessonSchema }]
 		),
 	],
-	providers: [UsersService],
-	exports: [UsersService],
-	controllers: [UsersController, ManageController],
+	providers: [CourseService],
+	controllers: [CourseController]
 })
-export class UsersModule {}
+export class CourseModule { }

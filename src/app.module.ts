@@ -9,6 +9,10 @@ import { FeedbackController } from './feedback/feedback.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { CourseController } from './course/course.controller';
+import { CourseService } from './course/course.service';
+import { CourseModule } from './course/course.module';
+import { CourseModule } from './course/course.module';
 @Module({
 	imports: [
 		ThrottlerModule.forRoot({
@@ -18,16 +22,18 @@ import { APP_GUARD } from '@nestjs/core';
 		AuthModule,
 		UsersModule,
 		MongooseModule.forRoot('mongodb://localhost/psapi'),
-		AuthorizationModule
+		AuthorizationModule,
+		CourseModule
 	], 
-	controllers: [AppController, FeedbackController],
+	controllers: [AppController, FeedbackController, CourseController],
 	providers: [
 		AppService,
 		AuthorizationService,
 		{
 			provide: APP_GUARD,
 			useClass: ThrottlerGuard
-		} 
+		},
+		CourseService 
 	],
 })
 export class AppModule { }
