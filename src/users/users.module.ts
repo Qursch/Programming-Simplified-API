@@ -16,6 +16,8 @@ import { Lesson, LessonSchema } from 'src/schemas/lesson.schema';
 	],
 	providers: [UsersService],
 	exports: [UsersService],
-	controllers: [UsersController, ManageController],
+	controllers: [UsersController, 
+		// ManageController
+	],
 })
 export class UsersModule {}
