@@ -8,6 +8,7 @@ import { Lesson, LessonSchema } from 'src/schemas/lesson.schema';
 
 @Module({
 	imports: [
+		CourseModule,
 		MongooseModule.forFeature([
 			{ name: User.name, schema: UserSchema }, 
 			{ name: Course.name, schema: CourseSchema }, 

@@ -13,7 +13,7 @@ export class Course {
 	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
 		user: User;
 	@Prop({ type: [{type: mongoose.Schema.Types.ObjectId}], ref: 'Lesson' })
-		lesson: Lesson[];
+		lessons: Lesson[];
 	@Prop()
 		status: number; // 0 (not started) | 1 (started, not finished) | 2 (finished)
 }
