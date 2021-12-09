@@ -1,9 +1,11 @@
-import { Controller, UseGuards, Post, Request, Body, Put, ConflictException, NotFoundException } from '@nestjs/common';
+import { Controller, UseGuards, Post, Request, Body, Put, ConflictException, NotFoundException, HttpCode, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from 'src/guards/auth/local.guard';
 import UserDto from 'src/dto/user.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import emailTemplate from './email.template';
+
 import { config } from 'dotenv';
 config();
 
@@ -25,22 +27,34 @@ export class AuthController {
 	}
 
 	@Put('register')
+	@HttpCode(201)
 	async register(@Body() dto: UserDto) {
-		
-		if(await this.usersService.userExists(dto.username, dto.email)) throw new ConflictException({message: 'CONFLICT'});
-		const token = await this.jwtService.sign({
-			username: dto.username,
-			email: dto.email
+		const res = await this.usersService.insert(dto);
+		if (res == 'CONFLICT') throw new ConflictException({
+			message: 'CONFLICT'
 		});
-
-		const msg = {
-			to: dto.email,
-			from: 'verify@programmingsimplified.org',
-			subject: 'Activate your Programming Simplified account.',
-			html: `<a href="programmingsimplified.org/activate/${token} style="padding: 10px; background-color: coral; border-radius: 5px>Activate</a>`
+		if (res == 'ERROR') throw new BadRequestException({
+			message: 'uh oh'
+		});
+		return {
+			message: res
 		};
+		// if(await this.usersService.userExists(dto.username, dto.email)) throw new ConflictException({message: 'CONFLICT'});
+		// const token = await this.jwtService.sign({
+		// 	username: dto.username,
+		// 	email: dto.email
+		// });
 
-		await sgMail.send(msg);
-		return 'SUCCESS';
+		// console.log(emailTemplate(token));
+
+		// const msg = {
+		// 	to: dto.email,
+		// 	from: 'verify@programmingsimplified.org',
+		// 	subject: 'Activate your Programming Simplified account.',
+		// 	html: emailTemplate(token)
+		// };
+
+		// await sgMail.send(msg);
+		// return 'Success';
 	}
 }
