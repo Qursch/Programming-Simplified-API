@@ -14,19 +14,19 @@ export class UsersController {
 		return req.user;
 	}
 
-	@Post('activate')
-	async activateAccount(@Body() activateDto: ActivateAccountDto) {
-		if (await this.jwtService.verifyAsync(activateDto.token)) {
-			const res = await this.usersService.insert(await this.jwtService.decode(activateDto.token));
-			if (res == 'CONFLICT') throw new ConflictException({
-				message: 'CONFLICT'
-			});
-			if (res == 'ERROR') throw new BadRequestException({
-				message: 'uh oh'
-			});
-			return {
-				message: res
-			};
-		}
-	}
+	// @Post('activate')
+	// async activateAccount(@Body() activateDto: ActivateAccountDto) {
+	// 	if (await this.jwtService.verifyAsync(activateDto.token)) {
+	// 		const res = await this.usersService.insert(await this.jwtService.decode(activateDto.token));
+	// 		if (res == 'CONFLICT') throw new ConflictException({
+	// 			message: 'CONFLICT'
+	// 		});
+	// 		if (res == 'ERROR') throw new BadRequestException({
+	// 			message: 'uh oh'
+	// 		});
+	// 		return {
+	// 			message: res
+	// 		};
+	// 	}
+	// }
 }
