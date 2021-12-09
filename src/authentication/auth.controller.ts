@@ -5,7 +5,6 @@ import UserDto from 'src/dto/user.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import emailTemplate from './email.template';
-
 import { config } from 'dotenv';
 config();
 
@@ -20,7 +19,6 @@ export class AuthController {
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
 	async login(@Request() req) {
-		console.log(req);
 		const token = this.authService.login(req.user);
 		if (token) return token;
 
@@ -32,7 +30,6 @@ export class AuthController {
 	async register(@Body() dto: UserDto) {
 		const res = await this.usersService.insert(dto);
 		return {
-			statusCode: 201,
 			message: res
 		};
 
