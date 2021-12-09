@@ -18,10 +18,12 @@ export class AuthController {
 
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
+	@HttpCode(202)
 	async login(@Request() req) {
 		const token = this.authService.login(req.user);
-		if (token) return token;
-		throw new NotFoundException();
+		return {
+			token
+		};
 	}
 
 	@Put('register')
