@@ -24,10 +24,14 @@ export class UsersService {
 		return await this.userModel.findOne({ email: email }).exec();
 	}
 
-	async insert(dto: UserDto): Promise<UserInsertResult> {
-		const foundByUsername = await this.findOne(dto.username);
-		const foundOneByEmail = await this.findOneByEmail(dto.email);
-		if(foundByUsername || foundOneByEmail) return 'CONFLICT';
+	async userExists(username: string, email: string) {
+		const foundByUsername = await this.findOne(username);
+		const foundOneByEmail = await this.findOneByEmail(email);
+		if(foundByUsername || foundOneByEmail) return true;
+		return false;
+	}
+	async insert(dto: any): Promise<UserInsertResult> {
+		if(await this.userExists(dto.username, dto.email)) return 'CONFLICT';
 		const user = dto;
 		user.password = (await argon2.hash(dto.password)).toString();
 		const res = new this.userModel(user as Partial<User>);

@@ -27,7 +27,7 @@ import { SuggestionsController } from './suggestions/suggestions.controller';
 		AuthorizationModule,
 		// CourseModule
 	],
-	controllers: [AppController, FeedbackController, CourseController, SuggestionsController],
+	controllers: [AppController, FeedbackController, /*CourseController, */ SuggestionsController],
 	providers: [
 		AppService,
 		AuthorizationService,
@@ -35,7 +35,7 @@ import { SuggestionsController } from './suggestions/suggestions.controller';
 			provide: APP_GUARD,
 			useClass: ThrottlerGuard
 		},
-		CourseService
+		// CourseService
 	],
 })
 export class AppModule { }
