@@ -22,7 +22,7 @@ export class AuthController {
 	async login(@Request() req) {
 		console.log(req);
 		const token = this.authService.login(req.user);
-		if(token) return token;
+		if (token) return token;
 
 		throw new NotFoundException();
 	}
@@ -31,15 +31,11 @@ export class AuthController {
 	@HttpCode(201)
 	async register(@Body() dto: UserDto) {
 		const res = await this.usersService.insert(dto);
-		if (res == 'CONFLICT') throw new ConflictException({
-			message: 'CONFLICT'
-		});
-		if (res == 'ERROR') throw new BadRequestException({
-			message: 'uh oh'
-		});
 		return {
+			statusCode: 201,
 			message: res
 		};
+
 		// if(await this.usersService.userExists(dto.username, dto.email)) throw new ConflictException({message: 'CONFLICT'});
 		// const token = await this.jwtService.sign({
 		// 	username: dto.username,
