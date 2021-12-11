@@ -6,8 +6,6 @@ import UserDto from 'src/dto/user.dto';
 
 import * as argon2 from 'argon2';
 
-export type UserInsertResult = 'CREATED' | 'CONFLICT' | 'ERROR';
-
 @Injectable()
 export class UsersService {
 	constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) { }
@@ -25,8 +23,9 @@ export class UsersService {
 		if (foundOneByEmail) return true;
 		return false;
 	}
+
 	async insert(dto): Promise<string> {
-		if (await this.userExists(dto.email)) throw new ConflictException('User already exists');
+		if (await this.userExists(dto.email)) throw new ConflictException('User with this email already exists');
 		const user = dto;
 		user.password = (await argon2.hash(dto.password)).toString();
 		const res = new this.userModel(user as Partial<User>);
