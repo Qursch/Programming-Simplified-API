@@ -5,7 +5,6 @@ import UserDto from 'src/dto/user.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import emailTemplate from './email.template';
-
 import { config } from 'dotenv';
 config();
 
@@ -18,9 +17,12 @@ export class AuthController {
 
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
+	@HttpCode(202)
 	async login(@Request() req) {
 		const token = this.authService.login(req.user);
-		if(token) return token;
+		if(token) return {
+			token
+		};
 
 		throw new NotFoundException();
 	}
@@ -29,15 +31,10 @@ export class AuthController {
 	@HttpCode(201)
 	async register(@Body() dto: UserDto) {
 		const res = await this.usersService.insert(dto);
-		if (res == 'CONFLICT') throw new ConflictException({
-			message: 'CONFLICT'
-		});
-		if (res == 'ERROR') throw new BadRequestException({
-			message: 'uh oh'
-		});
 		return {
 			message: res
 		};
+
 		// if(await this.usersService.userExists(dto.username, dto.email)) throw new ConflictException({message: 'CONFLICT'});
 		// const token = await this.jwtService.sign({
 		// 	username: dto.username,

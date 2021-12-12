@@ -1,5 +1,6 @@
 import { Controller, UseGuards, Get, Request, Post, Body, BadRequestException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ExtractJwt } from 'passport-jwt';
 import ActivateAccountDto from 'src/dto/activateAccount.dto';
 import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
 import { UsersService } from './users.service';
@@ -10,8 +11,10 @@ export class UsersController {
 
 	@UseGuards(JwtAuthGuard)
 	@Get('profile')
-	getProfile(@Request() req) {
-		return req.user;
+	async getProfile(@Request() req) {
+		const user = await this.usersService.findOneByEmail(req.user.email);
+		user.password = undefined;
+		return user;
 	}
 
 	// @Post('activate')
