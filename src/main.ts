@@ -13,7 +13,6 @@ async function bootstrap() {
 	});
 	app.enableCors();
 	if(process.env.USE_CSRF == 'true') {
-		console.log(process.env.USE_CSRF);
 		app.use(cookieParser());
 		app.use(csurf({ cookie: true }));
 	}

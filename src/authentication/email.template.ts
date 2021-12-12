@@ -1,4 +1,4 @@
-export default function (token: string) {
+export default function emailTemplate (token: string) {
 	return `
 	<div class="container">
 	<h1 class="title">Welcome to Programming Simplified!</h1>

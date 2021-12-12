@@ -30,6 +30,7 @@
     "@nestjs/throttler": "^2.0.0",
     "@notionhq/client": "^0.4.9",
     "@sendgrid/mail": "^7.6.0",
+    "@types/prompt": "^1.1.2",
     "argon2": "^0.28.3",
     "axios": "^0.24.0",
     "class-transformer": "^0.5.1",
@@ -44,6 +45,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "prompt": "^1.2.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"

@@ -12,9 +12,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { CourseController } from './course/course.controller';
 import { CourseService } from './course/course.service';
 import { SuggestionsController } from './suggestions/suggestions.controller';
-
-// import { CourseModule } from './course/course.module';
-// import { CourseModule } from './course/course.module';
 @Module({
 	imports: [
 		ThrottlerModule.forRoot({
@@ -27,7 +24,7 @@ import { SuggestionsController } from './suggestions/suggestions.controller';
 		AuthorizationModule,
 		// CourseModule
 	],
-	controllers: [AppController, FeedbackController, /*CourseController, */ SuggestionsController],
+	controllers: [AppController, FeedbackController, CourseController,  SuggestionsController],
 	providers: [
 		AppService,
 		AuthorizationService,
@@ -35,7 +32,7 @@ import { SuggestionsController } from './suggestions/suggestions.controller';
 			provide: APP_GUARD,
 			useClass: ThrottlerGuard
 		},
-		// CourseService
+		CourseService
 	],
 })
 export class AppModule { }

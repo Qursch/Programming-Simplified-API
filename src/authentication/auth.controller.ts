@@ -10,7 +10,6 @@ import { config } from 'dotenv';
 config();
 
 import * as sgMail from '@sendgrid/mail';
-console.log(process.env);
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 @Controller('auth')
@@ -20,7 +19,6 @@ export class AuthController {
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
 	async login(@Request() req) {
-		console.log(req);
 		const token = this.authService.login(req.user);
 		if(token) return token;
 
