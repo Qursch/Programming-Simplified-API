@@ -9,35 +9,35 @@ import { UserCourse, UserCourseDocument } from 'src/schemas/userCourse.schema';
 @Injectable()
 export class CourseService {
 	constructor(
-		@InjectModel(User.name) 
-			private userModel: Model<UserDocument>, 
+		@InjectModel(User.name)
+		private userModel: Model<UserDocument>,
 
-		@InjectModel(Course.name) 
-			private courseModel: Model<CourseDocument>, 
+		@InjectModel(Course.name)
+		private courseModel: Model<CourseDocument>,
 
-		@InjectModel(UserCourse.name) 
-			private userCourseModel: Model<UserCourseDocument>
+		@InjectModel(UserCourse.name)
+		private userCourseModel: Model<UserCourseDocument>
 	) { }
 
 	/* Lookups */
 	public async findOne_Course(courseId: string) {
 		const course = this.courseModel.findOne({ id: courseId });
-		if(!course) throw new NotFoundException('Course not found');
+		if (!course) throw new NotFoundException('Course not found');
 		return course;
 	}
 
 	public async findOne_User(email: string) {
 		const user = await this.userModel.findOne({ email: email });
-		if(!user) throw new NotFoundException('Buy a lottery ticket because you just triggered the fattest race condition known to man');
+		if (!user) throw new NotFoundException('Buy a lottery ticket because you just triggered the fattest race condition known to man');
 		return user;
 	}
 
 	public async findOne_UserCourse(user: User, courseName: string) {
-		const userCourse = this.userCourseModel.findOne({ user: user, name: courseName});
-		if(!userCourse) throw new NotFoundException('User Course not found');
+		const userCourse = this.userCourseModel.findOne({ user: user, name: courseName });
+		if (!userCourse) throw new NotFoundException('User Course not found');
 		return userCourse;
 	}
-	
+
 	/* Helpers */
 	public async enroll(username: string, dto: EnrollDto) {
 		const old = await this.userModel.findOne({ username: username });
@@ -49,7 +49,6 @@ export class CourseService {
 				completed: false,
 				progress: 0
 			})),
-			id: courseRef.id,
 			ref: courseRef,
 			status: 0,
 			user: old
@@ -58,18 +57,18 @@ export class CourseService {
 	}
 
 	public async progress(
-		email: string, 
-		courseName: string,  
-		lessonNumber: number, 
+		email: string,
+		courseName: string,
+		lessonNumber: number,
 		progress: number
 	) {
-		const user = await this.userModel.findOne({email: email});
-		if(!user) /* wtf */ throw new InternalServerErrorException('buy a lottery ticket');
-		const course = user.courses.find(c => c.courseRef.id == courseName);
-		if(!course) throw new NotFoundException('Course not found');
+		const user = await this.userModel.findOne({ email: email });
+		if (!user) /* wtf */ throw new InternalServerErrorException('buy a lottery ticket');
+		const course = user.courses.find(c => c.ref.id == courseName);
+		if (!course) throw new NotFoundException('Course not found');
 
 		// make sure we don't query out of range
-		if(course.lessons.length <= lessonNumber || lessonNumber < 0) throw new NotFoundException('Lesson not found');
+		if (course.lessons.length <= lessonNumber || lessonNumber < 0) throw new NotFoundException('Lesson not found');
 
 		// store the lesson etc.
 		const lesson = course.lessons[lessonNumber];
