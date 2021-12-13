@@ -28,9 +28,12 @@ export class CourseController {
 			lessonProgressDto.progress
 		);
 	}
+	
 
-	@Put('newCourse')
-	async newCourse(@Body() course: Course) {
-		await this.courseService.newCourse(course);
-	}
+	// UNDER NO CIRCUMSTANCES UNCOMMENT THIS METHOD
+
+	// @Put('newCourse')
+	// async newCourse(@Body() course: Course) {
+	// 	await this.courseService.newCourse(course);
+	// }
 }

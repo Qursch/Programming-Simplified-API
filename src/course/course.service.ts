@@ -19,6 +19,26 @@ export class CourseService {
 			private userCourseModel: Model<UserCourseDocument>
 	) { }
 
+	/* Lookups */
+	public async findOne_Course(courseId: string) {
+		const course = this.courseModel.findOne({ id: courseId });
+		if(!course) throw new NotFoundException('Course not found');
+		return course;
+	}
+
+	public async findOne_User(email: string) {
+		const user = await this.userModel.findOne({ email: email });
+		if(!user) throw new NotFoundException('Buy a lottery ticket because you just triggered the fattest race condition known to man');
+		return user;
+	}
+
+	public async findOne_UserCourse(user: User, courseName: string) {
+		const userCourse = this.userCourseModel.findOne({ user: user, name: courseName});
+		if(!userCourse) throw new NotFoundException('User Course not found');
+		return userCourse;
+	}
+	
+	/* Helpers */
 	public async addCourse(username: string, dto: AddCourseDto) {
 		const old = await this.userModel.findOne({ username: username });
 		const courseRef = await this.courseModel.findOne({ id: dto.id });
@@ -37,13 +57,9 @@ export class CourseService {
 		await old.save();
 	}
 
-	public findOne(courseId: string) {
-		return this.courseModel.findOne({ id: courseId });
-	}
-
 	public async progress(
 		email: string, 
-		courseName: string, 
+		courseName: string,  
 		lessonNumber: number, 
 		progress: number
 	) {
