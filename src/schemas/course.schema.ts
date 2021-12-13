@@ -6,7 +6,7 @@ export type CourseDocument = Course & Document;
 @Schema()
 export class Course {
 	@Prop()
-		name: string;
+		id: string;
 	@Prop()
 		description: string;
 	@Prop()

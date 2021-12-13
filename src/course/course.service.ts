@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import EnrollDto from 'src/dto/addCourse.dto';
+import EnrollDto from 'src/dto/enroll.dto';
 import { Course, CourseDocument } from 'src/schemas/course.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { UserCourse, UserCourseDocument } from 'src/schemas/userCourse.schema';
@@ -49,7 +49,7 @@ export class CourseService {
 				completed: false,
 				progress: 0
 			})),
-			name: courseRef.name,
+			id: courseRef.id,
 			ref: courseRef,
 			status: 0,
 			user: old
@@ -65,7 +65,7 @@ export class CourseService {
 	) {
 		const user = await this.userModel.findOne({email: email});
 		if(!user) /* wtf */ throw new InternalServerErrorException('buy a lottery ticket');
-		const course = user.courses.find(c => c.name == courseName);
+		const course = user.courses.find(c => c.courseRef.id == courseName);
 		if(!course) throw new NotFoundException('Course not found');
 
 		// make sure we don't query out of range
