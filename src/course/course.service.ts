@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import AddCourseDto from 'src/dto/addCourse.dto';
+import EnrollDto from 'src/dto/addCourse.dto';
 import { Course, CourseDocument } from 'src/schemas/course.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { UserCourse, UserCourseDocument } from 'src/schemas/userCourse.schema';
@@ -39,7 +39,7 @@ export class CourseService {
 	}
 	
 	/* Helpers */
-	public async addCourse(username: string, dto: AddCourseDto) {
+	public async enroll(username: string, dto: EnrollDto) {
 		const old = await this.userModel.findOne({ username: username });
 		const courseRef = await this.courseModel.findOne({ id: dto.id });
 

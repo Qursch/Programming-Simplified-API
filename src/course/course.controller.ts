@@ -1,4 +1,4 @@
-import { Body, Controller, Put, UseGuards, Request, Post, HttpCode } from '@nestjs/common';
+import { Body, Controller, Put, UseGuards, Request, Post, HttpCode, Get } from '@nestjs/common';
 import AddCourseDto from 'src/dto/addCourse.dto';
 import LessonProgressDto from 'src/dto/progress.dto';
 import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
@@ -10,11 +10,11 @@ import { CourseService } from './course.service';
 export class CourseController {
 	constructor(private courseService: CourseService, private usersService: UsersService) { }
 
-	@Put('add')
+	@Put('enroll')
 	@HttpCode(201)
 	@UseGuards(JwtAuthGuard)
-	async addCourse(@Request() req, @Body() addCourseDto: AddCourseDto) {
-		await this.courseService.addCourse(req.user, addCourseDto);
+	async enroll(@Request() req, @Body() addCourseDto: AddCourseDto) {
+		await this.courseService.enroll(req.user, addCourseDto);
 	}
 
 	@Post('progress')
@@ -28,6 +28,11 @@ export class CourseController {
 			lessonProgressDto.progress
 		);
 	}
+
+	@Get('progress')
+	@HttpCode(200)
+	@UseGuards(JwtAuthGuard)
+	async lesson
 	
 
 	// UNDER NO CIRCUMSTANCES UNCOMMENT THIS METHOD

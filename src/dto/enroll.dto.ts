@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export default class AddCourseDto {
+export default class EnrollDto {
 	@IsNotEmpty()
 		username: string;
 	@IsNotEmpty()
