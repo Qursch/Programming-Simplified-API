@@ -14,7 +14,7 @@ export class ProgressGateway {
 		await this.courseService.progress(
 			req.email, 
 			data.courseId, 
-			data.lessonNumber, 
+			data.lessonId, 
 			data.progress
 		);
 		return 'ok';
