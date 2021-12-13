@@ -7,6 +7,7 @@ import { UserCourse, UserCourseSchema } from 'src/schemas/userCourse.schema';
 import { Lesson, LessonSchema } from 'src/schemas/userLesson.schema';
 import { Course, CourseSchema } from 'src/schemas/course.schema';
 import { UsersService } from 'src/users/users.service';
+import { ProgressGateway } from './progress.gateway';
 
 @Module({
 	imports: [
@@ -18,7 +19,7 @@ import { UsersService } from 'src/users/users.service';
 			{ name: Lesson.name, schema: LessonSchema }]
 		),
 	],
-	providers: [UsersService, CourseService],
+	providers: [UsersService, CourseService, ProgressGateway],
 	exports: [CourseService],
 	controllers: [CourseController]
 })
