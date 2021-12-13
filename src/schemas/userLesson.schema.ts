@@ -12,7 +12,7 @@ export class Lesson {
 	@Prop()
 		completed: boolean;
 	@Prop()
-		progress: number; // 0 -> 100 (perc)
+		progress: number; // 0 -> 1 (perc)
 	
 }
 

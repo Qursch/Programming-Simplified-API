@@ -25,7 +25,9 @@ import { CourseService } from './course/course.service';
 		AuthorizationModule,
 		CourseModule
 	],
-	controllers: [AppController, FeedbackController, CourseController,  SuggestionsController],
+	controllers: [AppController, FeedbackController,
+		//  CourseController,
+		SuggestionsController],
 	providers: [
 		AppService,
 		AuthorizationService,
