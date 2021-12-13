@@ -49,7 +49,6 @@ export class CourseService {
 				completed: false,
 				progress: 0
 			})),
-			id: courseRef.id,
 			ref: courseRef,
 			status: 0,
 			user: old
@@ -65,7 +64,7 @@ export class CourseService {
 	) {
 		const user = await this.userModel.findOne({email: email});
 		if(!user) /* wtf */ throw new InternalServerErrorException('buy a lottery ticket');
-		const course = user.courses.find(c => c.courseRef.id == courseName);
+		const course = user.courses.find(c => c.ref.id == courseName);
 		if(!course) throw new NotFoundException('Course not found');
 
 		// make sure we don't query out of range
