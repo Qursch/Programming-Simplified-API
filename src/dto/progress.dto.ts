@@ -7,7 +7,7 @@ export default class LessonProgressDto {
 	
 	@IsNotEmpty()
 	@Min(0)
-		lessonNumber: number;
+		lessonId: number;
 
 	@IsNotEmpty()
 	@Min(0)

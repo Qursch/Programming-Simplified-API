@@ -59,7 +59,7 @@ export class CourseService {
 	public async progress(
 		email: string,
 		courseId: string,
-		lessonNumber: number,
+		lessonId: number,
 		progress: number
 	) {
 		const user = await this.userModel.findOne({ email: email });
@@ -68,10 +68,10 @@ export class CourseService {
 		if (!course) throw new NotFoundException('Course not found');
 
 		// make sure we don't query out of range
-		if (course.lessons.length <= lessonNumber || lessonNumber < 0) throw new NotFoundException('Lesson not found');
+		if (course.lessons.length <= lessonId || lessonId < 0) throw new NotFoundException('Lesson not found');
 
 		// store the lesson etc.
-		const lesson = course.lessons[lessonNumber];
+		const lesson = course.lessons[lessonId];
 		lesson.progress = progress;
 		return await user.save();
 	}
