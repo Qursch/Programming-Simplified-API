@@ -11,6 +11,6 @@ export default class LessonProgressDto {
 
 	@IsNotEmpty()
 	@Min(0)
-	@Max(100)
+	@Max(1)
 		progress: number;
 }
