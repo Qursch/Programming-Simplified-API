@@ -10,8 +10,6 @@ export class Course {
 	@Prop()
 		description: string;
 	@Prop()
-		difficulty: number; // 0 | 1 | 2
-	@Prop()
 		lessons: number;	
 }
 
