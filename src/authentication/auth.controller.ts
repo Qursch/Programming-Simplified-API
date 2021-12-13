@@ -19,8 +19,8 @@ export class AuthController {
 	@Post('login')
 	@HttpCode(202)
 	async login(@Request() req) {
-		const token = this.authService.login(req.user);
-		if(token) return {
+		const token = await this.authService.login(req.user);
+		if (token) return {
 			token
 		};
 
@@ -31,26 +31,30 @@ export class AuthController {
 	@HttpCode(201)
 	async register(@Body() dto: UserDto) {
 		const res = await this.usersService.insert(dto);
+		const token = await this.authService.login({ email: dto.email, password: dto.password });
+
 		return {
+			token,
 			message: res
 		};
-
-		// if(await this.usersService.userExists(dto.username, dto.email)) throw new ConflictException({message: 'CONFLICT'});
-		// const token = await this.jwtService.sign({
-		// 	username: dto.username,
-		// 	email: dto.email
-		// });
-
-		// console.log(emailTemplate(token));
-
-		// const msg = {
-		// 	to: dto.email,
-		// 	from: 'verify@programmingsimplified.org',
-		// 	subject: 'Activate your Programming Simplified account.',
-		// 	html: emailTemplate(token)
-		// };
-
-		// await sgMail.send(msg);
-		// return 'Success';
 	}
+
+	// if(await this.usersService.userExists(dto.username, dto.email)) throw new ConflictException({message: 'CONFLICT'});
+	// const token = await this.jwtService.sign({
+	// 	username: dto.username,
+	// 	email: dto.email
+	// });
+
+	// console.log(emailTemplate(token));
+
+	// const msg = {
+	// 	to: dto.email,
+	// 	from: 'verify@programmingsimplified.org',
+	// 	subject: 'Activate your Programming Simplified account.',
+	// 	html: emailTemplate(token)
+	// };
+
+	// await sgMail.send(msg);
+	// return 'Success';
 }
+

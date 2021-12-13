@@ -24,7 +24,7 @@ export class UsersService {
 		return false;
 	}
 
-	async insert(dto): Promise<string> {
+	async insert(dto: UserDto): Promise<string> {
 		if (await this.userExists(dto.email)) throw new ConflictException('User with this email already exists');
 		const user = dto;
 		user.password = (await argon2.hash(dto.password)).toString();

@@ -22,7 +22,7 @@ export class CourseController {
 	@UseGuards(JwtAuthGuard)
 	async lessonProgress(@Request() req, @Body() lessonProgressDto: LessonProgressDto) {
 		await this.courseService.progress(
-			req.emai, 
+			req.email, 
 			lessonProgressDto.courseName, 
 			lessonProgressDto.lessonNumber, 
 			lessonProgressDto.progress
