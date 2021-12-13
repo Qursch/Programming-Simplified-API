@@ -2,6 +2,8 @@ import { Body, Controller, Put, UseGuards, Request, Post, HttpCode, Get } from '
 import AddCourseDto from 'src/dto/enroll.dto';
 import LessonProgressDto from 'src/dto/progress.dto';
 import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
+import { Course } from 'src/schemas/course.schema';
+import { UserCourse } from 'src/schemas/userCourse.schema';
 import { Lesson } from 'src/schemas/userLesson.schema';
 import { UsersService } from 'src/users/users.service';
 import { CourseService } from './course.service';
@@ -36,14 +38,10 @@ export class CourseController {
 		const user = await this.courseService.findOne_User(req.email);
 		const courses = user.courses;
 
-		const lessons: Lesson[] = [];
-		courses.forEach(i => lessons.push(...i.lessons));
+		const lessons: Map<UserCourse, Lesson> = new Map();
+		courses.forEach(i => i.lessons.forEach(j => lessons.set(i, j)));
 
-		
 	}
-	
-
-	// UNDER NO CIRCUMSTANCES UNCOMMENT THIS METHOD
 
 	// @Put('newCourse')
 	// async newCourse(@Body() course: Course) {
