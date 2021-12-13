@@ -1,10 +1,9 @@
-import { Controller, UseGuards, Post, Request, Body, Put, ConflictException, NotFoundException, HttpCode, BadRequestException } from '@nestjs/common';
+import { Controller, UseGuards, Post, Request, Body, Put, NotFoundException, HttpCode } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from 'src/guards/auth/local.guard';
 import UserDto from 'src/dto/user.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import emailTemplate from './email.template';
 import { config } from 'dotenv';
 config();
 
