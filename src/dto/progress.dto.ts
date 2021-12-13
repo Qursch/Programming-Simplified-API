@@ -3,7 +3,7 @@ import { IsNotEmpty, Max, Min } from 'class-validator';
 
 export default class LessonProgressDto {
 	@IsNotEmpty()
-		courseName: string;
+		courseId: string;
 	
 	@IsNotEmpty()
 	@Min(0)

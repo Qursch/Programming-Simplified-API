@@ -23,7 +23,7 @@ export class CourseController {
 	async lessonProgress(@Request() req, @Body() lessonProgressDto: LessonProgressDto) {
 		await this.courseService.progress(
 			req.email, 
-			lessonProgressDto.courseName, 
+			lessonProgressDto.courseId, 
 			lessonProgressDto.lessonNumber, 
 			lessonProgressDto.progress
 		);

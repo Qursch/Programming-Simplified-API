@@ -55,16 +55,16 @@ export class CourseService {
 		});
 		await old.save();
 	}
-
+ 
 	public async progress(
 		email: string,
-		courseName: string,
+		courseId: string,
 		lessonNumber: number,
 		progress: number
 	) {
 		const user = await this.userModel.findOne({ email: email });
 		if (!user) /* wtf */ throw new InternalServerErrorException('buy a lottery ticket');
-		const course = user.courses.find(c => c.ref.id == courseName);
+		const course = user.courses.find(c => c.ref.id == courseId);
 		if (!course) throw new NotFoundException('Course not found');
 
 		// make sure we don't query out of range
