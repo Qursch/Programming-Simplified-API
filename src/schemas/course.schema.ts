@@ -8,6 +8,10 @@ export class Course {
 	@Prop()
 		name: string;
 	@Prop()
+		description: string;
+	@Prop()
+		difficulty: number; // 0 | 1 | 2
+	@Prop()
 		lessons: number;	
 }
 
