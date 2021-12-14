@@ -12,7 +12,7 @@ async function bootstrap() {
 		logger: ['log', 'error', 'warn']
 	});
 	app.enableCors();
-	if(process.env.USE_CSRF == 'true') {
+	if (process.env.USE_CSRF == 'true') {
 		app.use(cookieParser());
 		app.use(csurf({ cookie: true }));
 	}

@@ -13,9 +13,9 @@ import { ProgressGateway } from './progress.gateway';
 	imports: [
 		CourseModule,
 		MongooseModule.forFeature([
-			{ name: User.name, schema: UserSchema }, 
-			{ name: UserCourse.name, schema: UserCourseSchema }, 
-			{ name: Course.name, schema: CourseSchema }, 
+			{ name: User.name, schema: UserSchema },
+			{ name: UserCourse.name, schema: UserCourseSchema },
+			{ name: Course.name, schema: CourseSchema },
 			{ name: Lesson.name, schema: LessonSchema }]
 		),
 	],
