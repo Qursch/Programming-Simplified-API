@@ -19,18 +19,6 @@ export class CourseController {
 		await this.courseService.enroll(req.user, addCourseDto);
 	}
 
-	@Post('progress')
-	@HttpCode(201)
-	@UseGuards(JwtAuthGuard)
-	async lessonProgress(@Request() req, @Body() lessonProgressDto: LessonProgressDto) {
-		await this.courseService.progress(
-			req.email,
-			lessonProgressDto.courseId,
-			lessonProgressDto.lessonId + 1,
-			lessonProgressDto.progress
-		);
-	}
-
 	@Get('progress')
 	@HttpCode(200)
 	@UseGuards(JwtAuthGuard)
@@ -40,7 +28,6 @@ export class CourseController {
 
 		const lessons: Map<UserCourse, Lesson> = new Map();
 		courses.forEach(i => i.lessons.forEach(j => lessons.set(i, j)));
-
 	}
 
 	// @Put('newCourse')

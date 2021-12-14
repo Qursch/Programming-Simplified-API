@@ -55,14 +55,14 @@ export class CourseService {
 		});
 		await old.save();
 	}
- 
+
 	public async progress(
 		email: string,
 		courseId: string,
 		lessonId: number,
 		progress: number
 	) {
-		const user = await this.userModel.findOne({ email: email });
+		const user = await this.userModel.findOne({ email });
 		if (!user) /* wtf */ throw new InternalServerErrorException('buy a lottery ticket');
 		const course = user.courses.find(c => c.ref.id == courseId);
 		if (!course) throw new NotFoundException('Course not found');
@@ -73,7 +73,7 @@ export class CourseService {
 		// store the lesson etc.
 		const lesson = course.lessons[lessonId];
 		lesson.progress = progress;
-		return await user.save();
+		return user.save();
 	}
 
 	public async newCourse(
