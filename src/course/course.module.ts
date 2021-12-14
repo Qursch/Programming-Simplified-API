@@ -8,6 +8,7 @@ import { Course, CourseSchema } from 'src/schemas/course.schema';
 import { UsersService } from 'src/users/users.service';
 import { ProgressGateway } from './progress.gateway';
 import { Lesson, LessonSchema } from 'src/schemas/userLesson.schema';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
 	imports: [
