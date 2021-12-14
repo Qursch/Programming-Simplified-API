@@ -25,9 +25,7 @@ import { CourseService } from './course/course.service';
 		AuthorizationModule,
 		CourseModule
 	],
-	controllers: [AppController, FeedbackController,
-		//  CourseController,
-		SuggestionsController],
+	controllers: [AppController, FeedbackController, CourseController, SuggestionsController],
 	providers: [
 		AppService,
 		AuthorizationService,
@@ -35,7 +33,7 @@ import { CourseService } from './course/course.service';
 			provide: APP_GUARD,
 			useClass: ThrottlerGuard
 		},
-		// CourseService
+		CourseService
 	],
 })
 export class AppModule { }

@@ -19,11 +19,10 @@ export class AuthController {
 	@HttpCode(202)
 	async login(@Request() req) {
 		const token = await this.authService.login(req.user);
+		
 		if (token) return {
 			token
 		};
-
-		throw new NotFoundException();
 	}
 
 	@Put('register')
