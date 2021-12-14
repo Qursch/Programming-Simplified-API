@@ -27,14 +27,11 @@ export class CourseController {
 
 		const lessons: Map<UserCourse, Record<string, any>> = new Map();
 		courses.forEach(i => i.lessons.forEach(j => lessons.set(i, j)));
-<<<<<<< HEAD
 
 		const notCompleted = courses.filter(course => course.status != 2);
 		const nextLessons = new Array<Record<string, any>>();
 		notCompleted.forEach(course => nextLessons.push(course.lessons.find(lesson => lesson.progress < 100)));
 
-=======
->>>>>>> 740b5cff56550a6258b80666fd1ad0c01eab9fd2
 	}
 
 	// @Put('newCourse')
