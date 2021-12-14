@@ -1,4 +1,4 @@
-import { IsNotEmpty, Max, Min } from 'class-validator';
+import { IsJWT, IsNotEmpty, Max, Min } from 'class-validator';
 
 
 export default class LessonProgressDto {
@@ -13,4 +13,7 @@ export default class LessonProgressDto {
 	@Min(0)
 	@Max(1)
 		progress: number;
+
+	@IsJWT()
+		jwt: string;
 }
