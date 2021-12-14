@@ -10,6 +10,7 @@ export class ProgressGateway implements OnGatewayConnection, OnGatewayDisconnect
 	constructor(private courseService: CourseService) { }
 
 	handleConnection(client: Socket) {
+		// client.disconnect();
 		console.log(`Client connected: ${client.id}`);
 	}
 	handleDisconnect(client: Socket) {
