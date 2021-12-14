@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Body, Controller, Put, UseGuards, Request, Post, HttpCode, Get } from '@nestjs/common';
+import { Body, Controller, Put, UseGuards, Request, HttpCode, Get } from '@nestjs/common';
 import EnrollDto from 'src/dto/enroll.dto';
-import LessonProgressDto from 'src/dto/progress.dto';
 import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
 import { UserCourse } from 'src/schemas/userCourse.schema';
 import { UsersService } from 'src/users/users.service';

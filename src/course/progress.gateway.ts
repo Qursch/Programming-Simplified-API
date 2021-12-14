@@ -1,11 +1,9 @@
-import { Req, UseGuards } from '@nestjs/common';
-import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WsException, WsResponse } from '@nestjs/websockets';
+import { Req } from '@nestjs/common';
+import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WsException, WsResponse } from '@nestjs/websockets';
 import LessonProgressDto from 'src/dto/progress.dto';
-import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
 import { CourseService } from './course.service';
 import { Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
 
 @WebSocketGateway({ cors: true })
 export class ProgressGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -21,9 +19,9 @@ export class ProgressGateway implements OnGatewayConnection, OnGatewayDisconnect
 	}
 
 	@SubscribeMessage('progress')
-	async handleProgress(client: Socket, @MessageBody() data: LessonProgressDto, @Req() req: Request): Promise<WsResponse<string>> {
+	async handleProgress(client: Socket, @MessageBody() data: LessonProgressDto, @Req() req: Socket): Promise<WsResponse<string>> {
 		console.log(data);
-		const user = this.jwtService.verify(client.handshake.headers.authorization.split(' ')[1]);
+		const user = this.jwtService.verify(req.handshake.headers.authorization.split(' ')[1]);
 		if(!user) throw new WsException('Invalid token');
 		await this.courseService.progress(
 			user.email,
