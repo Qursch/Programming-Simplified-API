@@ -4,7 +4,6 @@ import { UsersController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/schemas/user.schema';
 import { UserCourse, UserCourseSchema } from 'src/schemas/userCourse.schema';
-import { Lesson, LessonSchema } from 'src/schemas/userLesson.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { config } from 'dotenv';
 config();
@@ -13,8 +12,8 @@ config();
 	imports: [
 		MongooseModule.forFeature([
 			{ name: User.name, schema: UserSchema }, 
-			{ name: UserCourse.name, schema: UserCourseSchema }, 
-			{ name: Lesson.name, schema: LessonSchema }]
+			{ name: UserCourse.name, schema: UserCourseSchema }
+		]
 		),
 		JwtModule.register({
 			secret: process.env.JWT_SECRET,

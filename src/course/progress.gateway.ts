@@ -6,7 +6,8 @@ import { CourseService } from './course.service';
 
 @WebSocketGateway(1025, { transports: ['websocket'] })
 export class ProgressGateway {
-	constructor(private courseService: CourseService) { }
+	constructor(private courseService: CourseService) {
+	}
 
 	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage('progress')
@@ -14,7 +15,7 @@ export class ProgressGateway {
 		await this.courseService.progress(
 			req.email, 
 			data.courseId, 
-			data.lessonNumber, 
+			data.lessonId, 
 			data.progress
 		);
 		return 'ok';

@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Body, Controller, Put, UseGuards, Request, Post, HttpCode, Get } from '@nestjs/common';
-import AddCourseDto from 'src/dto/enroll.dto';
+import EnrollDto from 'src/dto/enroll.dto';
 import LessonProgressDto from 'src/dto/progress.dto';
 import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
-import { Course } from 'src/schemas/course.schema';
 import { UserCourse } from 'src/schemas/userCourse.schema';
-import { Lesson } from 'src/schemas/userLesson.schema';
 import { UsersService } from 'src/users/users.service';
 import { CourseService } from './course.service';
 
@@ -15,8 +14,8 @@ export class CourseController {
 	@Put('enroll')
 	@HttpCode(201)
 	@UseGuards(JwtAuthGuard)
-	async enroll(@Request() req, @Body() addCourseDto: AddCourseDto) {
-		await this.courseService.enroll(req.user, addCourseDto);
+	async enroll(@Request() req, @Body() addCourseDto: EnrollDto) {
+		await this.courseService.enroll(req.user.email, addCourseDto);
 	}
 
 	@Post('progress')
@@ -38,8 +37,12 @@ export class CourseController {
 		const user = await this.courseService.findOne_User(req.email);
 		const courses = user.courses;
 
-		const lessons: Map<UserCourse, Lesson> = new Map();
+		const lessons: Map<UserCourse, Record<string, any>> = new Map();
 		courses.forEach(i => i.lessons.forEach(j => lessons.set(i, j)));
+
+		const notCompleted = courses.filter(course => course.status != 2);
+		const nextLessons = new Array<Record<string, any>>();
+		notCompleted.forEach(course => nextLessons.push(course.lessons.find(lesson => lesson.progress < 100)));
 
 	}
 

@@ -1,11 +1,11 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import EnrollDto from 'src/dto/enroll.dto';
 import { Course, CourseDocument } from 'src/schemas/course.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { UserCourse, UserCourseDocument } from 'src/schemas/userCourse.schema';
-
+import { Lesson, LessonDocument } from 'src/schemas/userLesson.schema';
 @Injectable()
 export class CourseService {
 	constructor(
@@ -16,7 +16,10 @@ export class CourseService {
 		private courseModel: Model<CourseDocument>,
 
 		@InjectModel(UserCourse.name)
-		private userCourseModel: Model<UserCourseDocument>
+		private userCourseModel: Model<UserCourseDocument>,
+
+		@InjectModel(Lesson.name)
+		private lessonModel: Model<LessonDocument>
 	) { }
 
 	/* Lookups */
@@ -39,23 +42,49 @@ export class CourseService {
 	}
 
 	/* Helpers */
-	public async enroll(username: string, dto: EnrollDto) {
-		const old = await this.userModel.findOne({ username: username });
-		const courseRef = await this.courseModel.findOne({ id: dto.id });
-
-		old.courses.push({
-			lessons: new Array(courseRef.lessons).map((_, i) => ({
-				id: i,
-				completed: false,
-				progress: 0
-			})),
-			ref: courseRef,
-			status: 0,
-			user: old
+	public async enroll(email: string, dto: EnrollDto) {
+		const old = await this.userModel.findOne({ email: email });
+		const has = await this.userCourseModel.findOne({
+			$and: [
+				{
+					id: dto.id
+				},
+				{
+					user: old._id
+				}
+			]
 		});
+		if(has) throw new ConflictException('User already enrolled');
+		const courseRef = await this.courseModel.findOne({ id: dto.id });
+		if(!courseRef) throw new NotFoundException('Course not found');
+
+		let lessons = new Array(courseRef.lessons).fill({});
+
+		lessons = lessons.map((_, i) => ({
+			id: i,
+			completed: false,
+			progress: 0
+		}
+		));
+
+		const lessonsRes = await this.lessonModel.insertMany(lessons);
+
+		
+		const inserted = await this.userCourseModel.insertMany([{
+			lessons: lessonsRes.map(l => l._id),
+			id: courseRef.id,
+			ref: courseRef._id,
+			status: 0,
+			user: old._id
+		}]);
+
+		console.log(inserted[0].lessons);
+
+
+		old.courses.push(inserted[0]._id);
 		await old.save();
 	}
- 
+
 	public async progress(
 		email: string,
 		courseId: string,
