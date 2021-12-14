@@ -93,9 +93,9 @@ export class CourseService {
 	) {
 		const user = await this.userModel.findOne({ email });
 		if (!user) /* wtf */ throw new InternalServerErrorException('buy a lottery ticket');
-		const course = user.courses.find(async c => {
+		const course = await this.courseModel.findOneById(user.courses.find(async c => {
 			return (await this.courseModel.findById(c.ref)).id == courseId;
-		});
+		}));
 		if (!course) throw new NotFoundException('Course not found');
 		console.log(course);
 		// make sure we don't query out of range
