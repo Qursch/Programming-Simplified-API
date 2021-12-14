@@ -19,22 +19,21 @@ export class AuthController {
 	@HttpCode(202)
 	async login(@Request() req) {
 		const token = await this.authService.login(req.user);
+
 		if (token) return {
 			token
 		};
-
-		throw new NotFoundException();
 	}
 
 	@Put('register')
 	@HttpCode(201)
 	async register(@Body() dto: UserDto) {
-		const res = await this.usersService.insert(dto);
+		const message = await this.usersService.insert(dto);
 		const token = await this.authService.login({ email: dto.email, password: dto.password });
 
 		return {
 			token,
-			message: res
+			message
 		};
 	}
 
