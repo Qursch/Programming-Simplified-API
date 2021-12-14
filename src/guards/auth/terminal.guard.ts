@@ -11,7 +11,7 @@ export class TerminalGuard implements CanActivate {
 		return this.validateRequest(request);
 	}
 
-	async validateRequest(request: any): Promise<boolean> {
+	async validateRequest(request): Promise<boolean> {
 		prompt.start();
 
 		console.log(request);

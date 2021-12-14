@@ -1,4 +1,4 @@
-import { IsJWT, IsNotEmpty, Max, Min } from 'class-validator';
+import { IsNotEmpty, Max, Min } from 'class-validator';
 
 
 export default class LessonProgressDto {
