@@ -54,9 +54,9 @@ export class CourseService {
 				}
 			]
 		});
-		if(has) throw new ConflictException('User already enrolled');
+		if (has) throw new ConflictException('User already enrolled');
 		const courseRef = await this.courseModel.findOne({ id: dto.id });
-		if(!courseRef) throw new NotFoundException('Course not found');
+		if (!courseRef) throw new NotFoundException('Course not found');
 
 		let lessons = new Array(courseRef.lessons).fill({});
 
@@ -69,7 +69,7 @@ export class CourseService {
 
 		const lessonsRes = await this.lessonModel.insertMany(lessons);
 
-		
+
 		const inserted = await this.userCourseModel.insertMany([{
 			lessons: lessonsRes.map(l => l._id),
 			id: courseRef.id,
@@ -94,11 +94,10 @@ export class CourseService {
 		const user = await this.userModel.findOne({ email });
 		if (!user) /* wtf */ throw new InternalServerErrorException('buy a lottery ticket');
 		const course = user.courses.find(async c => {
-			const ref = await this.courseModel.findById(c.ref);
-			return ref.id == courseId;
+			return (await this.courseModel.findById(c.ref)).id == courseId;
 		});
 		if (!course) throw new NotFoundException('Course not found');
-
+		console.log(course);
 		// make sure we don't query out of range
 		if (course.lessons.length <= lessonId || lessonId < 0) throw new NotFoundException('Lesson not found');
 
