@@ -10,11 +10,11 @@ import { CourseService } from './course.service';
 export class CourseController {
 	constructor(private courseService: CourseService, private usersService: UsersService) { }
 
+	@UseGuards(JwtAuthGuard)
 	@Post('progress')
 	async postProgress(@Req() req, @Body() data) {
-		const user = await this.usersService.findOneByEmail(req.user.email);
 		await this.courseService.progress(
-			user.email,
+			req.user.email,
 			data.courseId,
 			data.lessonId-1,
 			data.progress
