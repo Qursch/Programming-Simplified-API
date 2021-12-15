@@ -44,7 +44,17 @@ describe('CourseController', () => {
 	});
 
 	describe('getProgress', () => {
-		it('should return the non completed lessons', async () => {
+		it('should return the non completed lessons (mfw this doesnt pass)', async () => {
+			const nextLessons = {
+				'a5dcaa76-25fd-42b4-8cab-61a2067e66e5': {
+					'_id': '61b9559ff3b56cf507378034',
+					'progress': 0.5,
+					'completed': false,
+					'id': 0,
+					'__v': 0
+				}
+			};
+
 			const user = {
 				courses: [
 					{
@@ -66,15 +76,10 @@ describe('CourseController', () => {
 				],
 			};
 	
+			jest.spyOn(service, 'getProgress').mockImplementation(async (..._) => { _; return nextLessons; });
 			jest.spyOn(service, 'findOne_User').mockImplementation(async (..._) => { _; return user; });
 	
-			expect(await controller.getProgress({
-				email: ''
-			})).toStrictEqual([{
-				progress: 0,
-				id: 0,
-				completed: false
-			}]);
+			expect(await controller.getProgress({ user: { email: '' } })).toStrictEqual(nextLessons);
 		});
 	});
 });
