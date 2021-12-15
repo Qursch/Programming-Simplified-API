@@ -3,12 +3,11 @@ import { Body, Controller, Put, UseGuards, Request, HttpCode, Get, Post, Req } f
 import EnrollDto from 'src/dto/enroll.dto';
 import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
 import { UserCourse } from 'src/schemas/userCourse.schema';
-import { UsersService } from 'src/users/users.service';
 import { CourseService } from './course.service';
 
 @Controller('course')
 export class CourseController {
-	constructor(private courseService: CourseService, private usersService: UsersService) { }
+	constructor(private courseService: CourseService) { }
 
 	@UseGuards(JwtAuthGuard)
 	@Post('progress')
