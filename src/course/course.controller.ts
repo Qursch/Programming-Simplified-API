@@ -39,8 +39,9 @@ export class CourseController {
 
 		const notCompleted = courses.filter(course => course.status != 2);
 		const nextLessons = new Array<Record<string, any>>();
-		notCompleted.forEach(course => nextLessons.push(course.lessons.find(lesson => lesson.progress < 100)));
+		notCompleted.forEach(course => nextLessons.push(course.lessons.find(lesson => lesson.progress < 1)));
 
+		return nextLessons;
 	}
 
 	// @Put('newCourse')
