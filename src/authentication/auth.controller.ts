@@ -3,16 +3,15 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from 'src/guards/auth/local.guard';
 import UserDto from 'src/dto/user.dto';
 import { UsersService } from 'src/users/users.service';
-import { JwtService } from '@nestjs/jwt';
 import { config } from 'dotenv';
 config();
 
-import * as sgMail from '@sendgrid/mail';
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// import * as sgMail from '@sendgrid/mail';
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 @Controller('auth')
 export class AuthController {
-	constructor(private jwtService: JwtService, private authService: AuthService, private usersService: UsersService) { }
+	constructor(private authService: AuthService, private usersService: UsersService) { }
 
 	@UseGuards(LocalAuthGuard)
 	@Post('login')

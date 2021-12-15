@@ -17,7 +17,7 @@ export class UserCourse {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		lessons: Lesson[];
 	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Users' })
-		user: User;
+		user: Partial<User>;
 	@Prop()
 		status: number; // 0 (not started) | 1 (started, not finished) | 2 (finished)
 }
