@@ -29,7 +29,7 @@ export class CourseService {
 		return course;
 	}
 
-	public async findOne_User(email: string) {
+	public async findOne_User(email: string): Promise<Partial<User & Document>> {
 		const user = await this.userModel.findOne({ email: email });
 		if (!user) throw new NotFoundException('Buy a lottery ticket because you just triggered the fattest race condition known to man');
 		return user;
