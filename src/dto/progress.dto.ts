@@ -13,4 +13,7 @@ export default class LessonProgressDto {
 	@Min(0)
 	@Max(1)
 		progress: number;
+
+	@IsNotEmpty()
+		session_start: boolean;
 }

@@ -2,7 +2,7 @@
 import { Body, Controller, Put, UseGuards, Request, HttpCode, Get, Post, Req } from '@nestjs/common';
 import EnrollDto from 'src/dto/enroll.dto';
 import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
-import { UserCourse } from 'src/schemas/userCourse.schema';
+import { User } from 'src/schemas/user.schema';
 import { CourseService } from './course.service';
 
 @Controller('course')
@@ -31,17 +31,8 @@ export class CourseController {
 	@HttpCode(200)
 	@UseGuards(JwtAuthGuard)
 	async getProgress(@Request() req) {
-		const user = await this.courseService.findOne_User(req.email);
-		const courses = user.courses;
-
-		const lessons: Map<UserCourse, Record<string, any>> = new Map();
-		courses.forEach(i => i.lessons.forEach(j => lessons.set(i, j)));
-
-		const notCompleted = courses.filter(course => course.status != 2);
-		const nextLessons = new Array<Record<string, any>>();
-		notCompleted.forEach(course => nextLessons.push(course.lessons.find(lesson => lesson.progress < 1)));
-
-		return nextLessons;
+		const user = await this.courseService.findOne_User(req.user.email) as User;
+		return this.courseService.getProgress(user);
 	}
 
 	// @Put('newCourse')

@@ -123,4 +123,27 @@ export class CourseService {
 			course
 		]);
 	}
+
+	public async getProgress (
+		user: User
+	) {
+		const courses = await Promise.all(user.courses.map(async i => this.userCourseModel.findById(i))) as UserCourse[];
+
+		const lessons = new Map<UserCourse, Lesson[]>();
+
+		courses.forEach(i => lessons.set(i, i.lessons));
+		const nextLessons: Record<string, Lesson> = { };
+		for (const [k, v] of lessons) {
+			if(k.status != 2) {
+				nextLessons[k.id] = (
+					await Promise.all(
+						v.map(i => 
+							this.lessonModel.findById(i)
+						)
+					)
+				).find(i => i.progress < 1);
+			}
+		}
+		return nextLessons;
+	}
 }
