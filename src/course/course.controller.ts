@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Body, Controller, Put, UseGuards, Request, HttpCode, Get } from '@nestjs/common';
+import { Body, Controller, Put, UseGuards, Request, HttpCode, Get, Post, Req } from '@nestjs/common';
 import EnrollDto from 'src/dto/enroll.dto';
 import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
 import { UserCourse } from 'src/schemas/userCourse.schema';
@@ -9,6 +9,17 @@ import { CourseService } from './course.service';
 @Controller('course')
 export class CourseController {
 	constructor(private courseService: CourseService, private usersService: UsersService) { }
+
+	@Post('progress')
+	async postProgress(@Req() req, @Body() data) {
+		const user = await this.usersService.findOneByEmail(req.user.email);
+		await this.courseService.progress(
+			user.email,
+			data.courseId,
+			data.lessonId-1,
+			data.progress
+		);
+	}
 
 	@Put('enroll')
 	@HttpCode(201)

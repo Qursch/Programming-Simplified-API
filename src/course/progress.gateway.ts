@@ -13,20 +13,20 @@ export class ProgressGateway implements OnGatewayConnection, OnGatewayDisconnect
 		// client.disconnect();
 		console.log(`Client connected: ${client.id}`);
 	}
-
+	
 	handleDisconnect(client: Socket) {
 		console.log(`Client disconnected: ${client.id}`);
 	}
 
 	@SubscribeMessage('progress')
 	async handleProgress(client: Socket, @MessageBody() data: LessonProgressDto, @Req() req: Socket): Promise<WsResponse<string>> {
-		console.log(data);
-		const user = this.jwtService.decode(req.handshake.headers.authorization.split(' ')[1]) as Record<string, any>;
-		if (!user) throw new WsException('Invalid token');
+
+		const user = this.jwtService.verify(req.handshake.headers.authorization.split(' ')[1]);
+		if(!user) throw new WsException('Invalid token');
 		await this.courseService.progress(
 			user.email,
 			data.courseId,
-			data.lessonId,
+			data.lessonId-1,
 			data.progress
 		);
 		return { event: 'progress', data: 'ok' };

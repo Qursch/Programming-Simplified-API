@@ -43,7 +43,8 @@ export class CourseService {
 
 	/* Helpers */
 	public async enroll(email: string, dto: EnrollDto) {
-		const old = await this.userModel.findOne({ email: email });
+		const old = await this.userModel.findOne({ email });
+		console.log(old.courses)
 		const has = await this.userCourseModel.findOne({
 			$and: [
 				{
@@ -93,18 +94,32 @@ export class CourseService {
 	) {
 		const user = await this.userModel.findOne({ email });
 		if (!user) /* wtf */ throw new InternalServerErrorException('buy a lottery ticket');
-		const course = await this.courseModel.findOneById(user.courses.find(async c => {
-			return (await this.courseModel.findById(c.ref)).id == courseId;
+		const course = await this.userCourseModel.findById(user.courses.find(async c => {
+			try {
+				const userCourse = await this.userCourseModel.findById(c);
+				const course = await this.courseModel.findById(userCourse.ref);
+				return course.id == courseId;
+			} catch {
+				return false
+			}
+			
 		}));
 		if (!course) throw new NotFoundException('Course not found');
-		console.log(course);
 		// make sure we don't query out of range
 		if (course.lessons.length <= lessonId || lessonId < 0) throw new NotFoundException('Lesson not found');
 
 		// store the lesson etc.
-		const lesson = course.lessons[lessonId];
-		lesson.progress = progress;
-		return user.save();
+		let lesson = await this.lessonModel.findById(course.lessons[lessonId]);
+		if(!lesson) {
+			lesson = await this.lessonModel.insertMany([{
+				id: lessonId, 
+				progress,
+				completed: progress == 1
+			}])[0];
+		} else {
+			lesson.progress = progress;
+			return lesson.save();
+		}
 	}
 
 	public async newCourse(
