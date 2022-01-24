@@ -1,7 +1,14 @@
-export default interface UserDto {
-	username: string;
-	password: string;
-	name: string;
-	email: string;
-// eslint-disable-next-line semi
+import { IsEmail, IsNotEmpty } from 'class-validator';
+export default class UserDto {
+	@IsNotEmpty()
+		firstName: string;
+	@IsNotEmpty()
+		lastName: string;
+	@IsNotEmpty()
+		password: string;
+	@IsNotEmpty()
+	@IsEmail()
+		email: string;
+
+
 }

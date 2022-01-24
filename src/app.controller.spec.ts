@@ -12,7 +12,6 @@ describe('AppController', () => {
 		}).compile();
 
 		appController = app.get<AppController>(AppController);
-		appController;
 	});
 
 	it('should be defined', async () => {

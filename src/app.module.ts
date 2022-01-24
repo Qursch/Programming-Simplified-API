@@ -14,8 +14,8 @@ import { SuggestionsController } from './suggestions/suggestions.controller';
 @Module({
 	imports: [
 		ThrottlerModule.forRoot({
-			ttl: 60,
-			limit: 10,
+			ttl: 1,
+			limit: 5,
 		}),
 		AuthModule,
 		UsersModule,

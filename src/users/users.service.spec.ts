@@ -25,10 +25,6 @@ describe('UsersService', () => {
 					provide: getModelToken(UserCourse.name),
 					useValue: { }
 				},
-				{
-					provide: getModelToken(Lesson.name),
-					useValue: { }
-				},
 			],
 		}).compile();
 

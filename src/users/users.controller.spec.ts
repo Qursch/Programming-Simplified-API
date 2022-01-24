@@ -29,7 +29,7 @@ describe('UsersController', () => {
 					useValue: emptyModel
 				},
 				{
-					provide: getModelToken(Lesson.name),
+					provide: getModelToken(UserCourse.name),
 					useValue: emptyModel
 				},
 			]

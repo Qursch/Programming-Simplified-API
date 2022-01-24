@@ -26,6 +26,8 @@ export class UsersService {
 
 	async insert(dto: UserDto): Promise<string> {
 		if (await this.userExists(dto.email)) throw new ConflictException('User with this email already exists');
+		dto.firstName = dto.firstName.trim();
+		dto.lastName = dto.lastName.trim();
 		const user = dto;
 		user.password = (await argon2.hash(dto.password)).toString();
 		const res = new this.userModel(user as Partial<User>);

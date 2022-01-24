@@ -8,7 +8,9 @@ export class Course {
 	@Prop()
 		id: string;
 	@Prop()
-		lessons: number;	
+		name: string;
+	@Prop()
+		lessons: string[]; // lesson names
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

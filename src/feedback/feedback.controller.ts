@@ -1,5 +1,4 @@
-import { BadRequestException, Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/guards/auth/jwt.guard';
+import { BadRequestException, Body, Controller, Logger, Post } from '@nestjs/common';
 import { MessageEmbed } from 'discord.js';
 import axios from 'axios';
 import { Client } from '@notionhq/client';
@@ -88,19 +87,12 @@ export class FeedbackController {
 		}
 		*/
 		const username = feedback.username;
-		const selectIds = {
-			ui: '',
-			auth: '',
-			apidb: '',
-			video: '',
-			other: ''
-		};
 		const props = {
 			Author: {
 				title: [
 					{
 						text: {
-							content: `Bug Report by ${username ?? '<username not provided>'}`,
+							content: username ?? '<username not provided>',
 						}
 					}
 				]
@@ -149,7 +141,7 @@ export class FeedbackController {
 			});
 
 			this.logger.log('Created new bug report');
-		} catch (e){
+		} catch (e) {
 			this.logger.error(e);
 
 			return new BadRequestException('we did an oopsie');

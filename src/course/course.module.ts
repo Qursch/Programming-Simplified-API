@@ -7,7 +7,6 @@ import { UserCourse, UserCourseSchema } from 'src/schemas/userCourse.schema';
 import { Course, CourseSchema } from 'src/schemas/course.schema';
 import { UsersService } from 'src/users/users.service';
 import { ProgressGateway } from './progress.gateway';
-import { Lesson, LessonSchema } from 'src/schemas/userLesson.schema';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -16,9 +15,8 @@ import { JwtModule } from '@nestjs/jwt';
 		MongooseModule.forFeature([
 			{ name: User.name, schema: UserSchema },
 			{ name: UserCourse.name, schema: UserCourseSchema },
-			{ name: Course.name, schema: CourseSchema },
-			{ name: Lesson.name, schema: LessonSchema }]
-		),
+			{ name: Course.name, schema: CourseSchema }
+		]),
 		JwtModule.register({
 			secret: process.env.JWT_SECRET,
 			signOptions: { expiresIn: '2hr' },
