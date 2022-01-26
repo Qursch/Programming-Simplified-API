@@ -32,7 +32,7 @@
     "@nestjs/platform-socket.io": "^8.2.3",
     "@nestjs/throttler": "^2.0.0",
     "@nestjs/websockets": "^8.2.3",
-    "@notionhq/client": "^0.4.9",
+    "@notionhq/client": "^0.4.13",
     "@sendgrid/mail": "^7.6.0",
     "argon2": "^0.28.3",
     "axios": "^0.24.0",
