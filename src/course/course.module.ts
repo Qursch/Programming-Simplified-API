@@ -19,7 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
 		]),
 		JwtModule.register({
 			secret: process.env.JWT_SECRET,
-			signOptions: { expiresIn: '2hr' },
+			signOptions: { expiresIn: '30d' },
 		}),
 	],
 	providers: [UsersService, CourseService, ProgressGateway],
