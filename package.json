@@ -41,7 +41,7 @@
     "cookie-parser": "^1.4.6",
     "csurf": "^1.11.0",
     "discord.js": "^13.3.1",
-    "dotenv": "^10.0.0",
+    "dotenv": "^16.0.0",
     "helmet": "^4.6.0",
     "mongoose": "^6.1.8",
     "notion-api-js": "^2.4.0",
