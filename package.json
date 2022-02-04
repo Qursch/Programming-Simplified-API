@@ -31,7 +31,7 @@
     "@nestjs/platform-express": "^8.2.6",
     "@nestjs/platform-socket.io": "^8.2.3",
     "@nestjs/throttler": "^2.0.0",
-    "@nestjs/websockets": "^8.2.3",
+    "@nestjs/websockets": "^8.2.6",
     "@notionhq/client": "^0.4.13",
     "@sendgrid/mail": "^7.6.0",
     "argon2": "^0.28.3",
