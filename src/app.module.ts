@@ -11,6 +11,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { CourseModule } from './course/course.module';
 import { SuggestionsController } from './suggestions/suggestions.controller';
+import { config } from 'dotenv';
+config();
 @Module({
 	imports: [
 		ThrottlerModule.forRoot({
@@ -19,7 +21,7 @@ import { SuggestionsController } from './suggestions/suggestions.controller';
 		}),
 		AuthModule,
 		UsersModule,
-		MongooseModule.forRoot('mongodb://localhost/psapi'),
+		MongooseModule.forRoot(process.env.MONGO),
 		AuthorizationModule,
 		CourseModule
 	],
