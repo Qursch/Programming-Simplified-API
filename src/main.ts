@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { config } from 'dotenv';
@@ -16,9 +17,10 @@ async function bootstrap() {
 		app.use(cookieParser());
 		app.use(csurf({ cookie: true }));
 	}
-	app.use(helmet());
+	app.use((helmet as unknown as Function)() );
 	app.useGlobalPipes(new ValidationPipe());
 
 	await app.listen(process.env.PORT ?? 8081);
 }
+
 bootstrap();
