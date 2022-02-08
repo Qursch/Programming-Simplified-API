@@ -42,7 +42,7 @@
     "csurf": "^1.11.0",
     "discord.js": "^13.3.1",
     "dotenv": "^16.0.0",
-    "helmet": "^4.6.0",
+    "helmet": "^5.0.2",
     "mongoose": "^6.2.1",
     "notion-api-js": "^2.4.0",
     "passport": "^0.4.1",
