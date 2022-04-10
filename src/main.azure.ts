@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import { ValidationPipe } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { config } from 'dotenv';
 import { AppModule } from './app.module';
@@ -7,7 +6,7 @@ import helmet from 'helmet';
 import * as csurf from 'csurf';
 import * as cookieParser from 'cookie-parser';
 
-async function bootstrap() {
+export async function createApp(): Promise<INestApplication> {
   config();
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn'],
@@ -19,8 +18,8 @@ async function bootstrap() {
   }
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe());
+  app.setGlobalPrefix('api');
 
-  await app.listen(process.env.PORT ?? 8081);
+  await app.init();
+  return app;
 }
-
-bootstrap();
