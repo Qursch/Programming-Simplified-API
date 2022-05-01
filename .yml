@@ -1,2 +1,0 @@
-- name: Zero-waste Heroku Deploy
-  uses: formsort/action-heroku-deploy@v1
