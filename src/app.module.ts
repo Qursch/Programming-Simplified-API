@@ -11,6 +11,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { CourseModule } from './course/course.module';
 import { SuggestionsController } from './suggestions/suggestions.controller';
+import { CodepostController } from './codepost/codepost.controller';
+import { CodepostService } from './codepost/codepost.service';
 import { config } from 'dotenv';
 config();
 @Module({
@@ -25,10 +27,11 @@ config();
 		AuthorizationModule,
 		CourseModule
 	],
-	controllers: [AppController, FeedbackController, SuggestionsController],
+	controllers: [AppController, FeedbackController, SuggestionsController, CodepostController],
 	providers: [
 		AppService,
 		AuthorizationService,
+		CodepostService,
 		{
 			provide: APP_GUARD,
 			useClass: ThrottlerGuard
