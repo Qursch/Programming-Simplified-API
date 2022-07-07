@@ -11,6 +11,10 @@ export class Course {
 		name: string;
 	@Prop()
 		lessons: string[]; // lesson names
+	@Prop()
+		codePostInvite: string;
+	@Prop()
+		codePostId: string;
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

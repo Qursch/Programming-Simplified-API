@@ -20,7 +20,7 @@ export class CodepostService {
 				`https://api.codepost.io/courses/${courseId}/roster`,
 				options,
 			);
-			if (response.data.students.some((user) => user == email.toLowerCase())) {
+			if (response.data.students.includes(email.toLowerCase())) {
 				return true;
 			}
 
@@ -31,6 +31,21 @@ export class CodepostService {
 			return false;
 		} catch (error) {
 			throw new NotFoundException('Course not found.');
+		}
+	}
+
+	public async hasSubmitted(email: string, assignmentId: string) {
+		try {
+			const response = await axios.get(
+				`https://api.codepost.io/assignments/${assignmentId}/submissions`,
+				options,
+			);
+			if (response.data.some((submission) => submission.students.some((student) => student == email.toLowerCase()))) {
+				return true;
+			}
+			return false;
+		} catch (error) {
+			throw new NotFoundException('Assignment not found.');
 		}
 	}
 }

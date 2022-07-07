@@ -6,9 +6,15 @@ import { CodepostService } from 'src/codepost/codepost.service';
 export class CodepostController {
 	constructor(private codepostService: CodepostService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @Get('registered/:courseId')
+	@UseGuards(JwtAuthGuard)
+	@Get('registered/:courseId')
 	async isRegistered(@Req() req, @Param('courseId') courseId: string) {
 		return this.codepostService.isRegistered(req.user.email, courseId);
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@Get('submitted/:assignmentId')
+	async hasSubmitted(@Req() req, @Param('assignmentId') assignmentId: string) {
+		return this.codepostService.hasSubmitted(req.user.email, assignmentId);
 	}
 }
