@@ -40,7 +40,11 @@ export class CodepostService {
 				`https://api.codepost.io/assignments/${assignmentId}/submissions`,
 				options,
 			);
-			if (response.data.some((submission) => submission.students.some((student) => student == email.toLowerCase()))) {
+			if (
+				response.data.some((submission) =>
+					submission.students.includes(email.toLowerCase()),
+				)
+			) {
 				return true;
 			}
 			return false;
