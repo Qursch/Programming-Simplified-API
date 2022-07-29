@@ -24,10 +24,6 @@ export class CodepostService {
 				return true;
 			}
 
-			const course = await this.courseService.findOne_Course(courseId);
-			if (course.codePostInvite) {
-				return 'https://codepost.io/signup/join?code=' + course.codePostInvite;
-			}
 			return false;
 		} catch (error) {
 			throw new NotFoundException('Course not found.');
