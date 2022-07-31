@@ -26,6 +26,7 @@ export class CodepostService {
 
 			return false;
 		} catch (error) {
+			console.error(error);
 			throw new NotFoundException('Course not found.');
 		}
 	}
