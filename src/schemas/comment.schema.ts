@@ -13,7 +13,7 @@ export class Comment {
 		course: Course;
 	@Prop()
 		discussionId: string;
-	@Prop()
+	@Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] })
 		replyTo: string;
 	@Prop()
 		content: string;

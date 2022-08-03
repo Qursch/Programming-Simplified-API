@@ -33,6 +33,11 @@ export class DiscussionService {
 		const course = await this.courseModel.findOne({ _id: comment.courseId });
 		if (!course) throw new NotFoundException('Course not found');
 		const newComment = new this.commentModel(comment);
+		if (comment.replyTo) {
+			const replyTo = await this.commentModel.findOne({ _id: comment.replyTo });
+			if (!replyTo) throw new NotFoundException('Comment not found');
+			newComment.replyTo = replyTo.replyTo;
+		}
 		newComment.user = user;
 		newComment.course = course;
 		newComment.createdAt = new Date();
