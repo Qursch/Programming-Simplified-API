@@ -18,12 +18,14 @@ export class DiscussionService {
 		@InjectModel(Course.name)
 		private courseModel: Model<CourseDocument>,
 	) {}
+
 	public async getDiscussion(courseId: string, discussionId: string) {
 		const comments = await this.commentModel.find({
 			courseId,
 			discussionId,
 		});
-		if (!comments.length) return 'No comments found';
+
+		if (comments.length == 0) return 'No comments found';
 		return comments;
 	}
 
@@ -36,6 +38,7 @@ export class DiscussionService {
 		if (comment.replyTo) {
 			const replyTo = await this.commentModel.findOne({ _id: comment.replyTo });
 			if (!replyTo) throw new NotFoundException('Comment not found');
+			if (replyTo.replyTo) throw new NotFoundException('Not top level comment');
 			newComment.replyTo = replyTo.replyTo;
 		}
 		newComment.user = user;
