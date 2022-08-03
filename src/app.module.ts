@@ -32,16 +32,21 @@ config();
 		CourseModule,
 		DiscussionModule,
 	],
-	controllers: [AppController, FeedbackController, SuggestionsController, CodepostController, DiscussionController],
+	controllers: [
+		AppController,
+		FeedbackController,
+		SuggestionsController,
+		CodepostController,
+		DiscussionController,
+	],
 	providers: [
 		AppService,
 		AuthorizationService,
 		CodepostService,
-		DiscussionService,
 		{
 			provide: APP_GUARD,
-			useClass: ThrottlerGuard
+			useClass: ThrottlerGuard,
 		},
 	],
 })
-export class AppModule { }
+export class AppModule {}
