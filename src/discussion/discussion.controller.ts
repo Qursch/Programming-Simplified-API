@@ -29,7 +29,7 @@ export class DiscussionController {
 	constructor(private discussionService: DiscussionService) {}
 
 	@UseGuards(JwtAuthGuard)
-	@Get('discussion/:courseId/:discussionId')
+	@Get(':courseId/:discussionId')
 	async getDiscussion(
 		@Param('courseId') courseId: string,
 		@Param('discussionId') discussionId: string,

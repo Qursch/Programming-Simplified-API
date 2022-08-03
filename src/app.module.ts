@@ -16,7 +16,6 @@ import { CodepostController } from './codepost/codepost.controller';
 import { CodepostService } from './codepost/codepost.service';
 import { config } from 'dotenv';
 import { DiscussionController } from './discussion/discussion.controller';
-import { DiscussionService } from './discussion/discussion.service';
 
 config();
 @Module({
