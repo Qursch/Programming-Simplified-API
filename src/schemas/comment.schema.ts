@@ -7,13 +7,13 @@ export type CommentDocument = Comment & Document;
 
 @Schema()
 export class Comment {
-	@Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
+	@Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } })
 		user: User;
-	@Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }] })
+	@Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' } })
 		course: Course;
 	@Prop()
 		discussionId: string;
-	@Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] })
+	@Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'Comment' } })
 		replyTo: string;
 	@Prop()
 		content: string;
@@ -21,4 +21,4 @@ export class Comment {
 		createdAt: Date;
 }
 
-export const CommentSchema = SchemaFactory.createForClass(User);
+export const CommentSchema = SchemaFactory.createForClass(Comment);

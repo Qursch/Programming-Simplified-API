@@ -25,6 +25,15 @@ export class DiscussionService {
 			discussionId,
 		});
 
+		comments.map((comment) => {
+			delete comment.user.email;
+			delete comment.user.password;
+			delete comment.user.courses;
+			if (comment.user.lastName) {
+				comment.user.lastName = comment.user.lastName.charAt(0);
+			}
+		});
+
 		if (comments.length == 0) return 'No comments found';
 		return comments;
 	}
@@ -32,19 +41,26 @@ export class DiscussionService {
 	public async createComment(userId: string, comment: CommentType) {
 		const user = await this.userModel.findOne({ _id: userId });
 		if (!user) throw new NotFoundException('User not found');
-		const course = await this.courseModel.findOne({ _id: comment.courseId });
+		console.log(user);
+		const course = await this.courseModel.findOne({ id: comment.courseId });
 		if (!course) throw new NotFoundException('Course not found');
-		const newComment = new this.commentModel(comment);
+		const newComment = {
+			content: comment.content,
+			discussionId: comment.discussionId,
+			course: course,
+			user: user,
+			createdAt: new Date(),
+			replyTo: null,
+		};
 		if (comment.replyTo) {
 			const replyTo = await this.commentModel.findOne({ _id: comment.replyTo });
 			if (!replyTo) throw new NotFoundException('Comment not found');
 			if (replyTo.replyTo) throw new NotFoundException('Not top level comment');
 			newComment.replyTo = replyTo.replyTo;
 		}
-		newComment.user = user;
-		newComment.course = course;
-		newComment.createdAt = new Date();
-		const commentCreated = await newComment.save();
-		return commentCreated;
+		const commentDoc = new this.commentModel(newComment);
+		commentDoc.user = user;
+		await commentDoc.save();
+		return commentDoc;
 	}
 }

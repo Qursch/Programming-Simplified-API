@@ -40,6 +40,6 @@ export class DiscussionController {
 	@UseGuards(JwtAuthGuard)
 	@Post('comment')
 	async createComment(@Req() req, @Body() comment: CommentType) {
-		return this.discussionService.createComment(req.user.email, comment);
+		return this.discussionService.createComment(req.user.userId, comment);
 	}
 }
