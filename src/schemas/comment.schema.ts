@@ -21,4 +21,4 @@ export class Comment {
 		createdAt: Date;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const CommentSchema = SchemaFactory.createForClass(User);

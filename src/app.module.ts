@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './authentication/auth.module';
 import { UsersModule } from './users/users.module';
+import { DiscussionModule } from './discussion/discussion.module';
 import { AuthorizationService } from './authorization/authorization.service';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { FeedbackController } from './feedback/feedback.controller';
@@ -14,6 +15,9 @@ import { SuggestionsController } from './suggestions/suggestions.controller';
 import { CodepostController } from './codepost/codepost.controller';
 import { CodepostService } from './codepost/codepost.service';
 import { config } from 'dotenv';
+import { DiscussionController } from './discussion/discussion.controller';
+import { DiscussionService } from './discussion/discussion.service';
+
 config();
 @Module({
 	imports: [
@@ -25,13 +29,15 @@ config();
 		UsersModule,
 		MongooseModule.forRoot(process.env.MONGO),
 		AuthorizationModule,
-		CourseModule
+		CourseModule,
+		DiscussionModule,
 	],
-	controllers: [AppController, FeedbackController, SuggestionsController, CodepostController],
+	controllers: [AppController, FeedbackController, SuggestionsController, CodepostController, DiscussionController],
 	providers: [
 		AppService,
 		AuthorizationService,
 		CodepostService,
+		DiscussionService,
 		{
 			provide: APP_GUARD,
 			useClass: ThrottlerGuard
