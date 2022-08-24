@@ -7,9 +7,9 @@ export type CommentDocument = Comment & Document;
 
 @Schema()
 export class Comment {
-	@Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } })
+	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
 		user: User;
-	@Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' } })
+	@Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Course' })
 		course: Course;
 	@Prop()
 		discussionId: string;

@@ -25,23 +25,26 @@ export class DiscussionService {
 			discussionId,
 		});
 
-		comments.map((comment) => {
-			delete comment.user.email;
-			delete comment.user.password;
-			delete comment.user.courses;
-			if (comment.user.lastName) {
-				comment.user.lastName = comment.user.lastName.charAt(0);
-			}
-		});
-
 		if (comments.length == 0) return 'No comments found';
-		return comments;
+
+		const filtered = comments.map((comment) => {
+			return {
+				firstName: comment.user.firstName,
+				lastName: comment.user.lastName ? comment.user.lastName.charAt(0) : '',
+				content: comment.content,
+				createdAt: new Date(),
+				replyTo: comment.replyTo,
+				courseId: comment.course,
+			};
+		});
+		console.log(filtered);
+
+		return filtered;
 	}
 
 	public async createComment(userId: string, comment: CommentType) {
 		const user = await this.userModel.findOne({ _id: userId });
 		if (!user) throw new NotFoundException('User not found');
-		console.log(user);
 		const course = await this.courseModel.findOne({ id: comment.courseId });
 		if (!course) throw new NotFoundException('Course not found');
 		const newComment = {
@@ -61,6 +64,13 @@ export class DiscussionService {
 		const commentDoc = new this.commentModel(newComment);
 		commentDoc.user = user;
 		await commentDoc.save();
-		return commentDoc;
+		return {
+			firstName: user.firstName,
+			lastName: user.lastName ? user.lastName.charAt(0) : '',
+			content: comment.content,
+			createdAt: new Date(),
+			replyTo: comment.replyTo,
+			courseId: comment.courseId,
+		};
 	}
 }
